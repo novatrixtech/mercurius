@@ -1,0 +1,114 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        title #{Tr("app")}
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+    body
+        nav.navbar.navbar-default
+            .container-fluid
+                .navbar-header
+                    button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false')
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href='/') #{Tr("app")}
+                #navbar.collapse.navbar-collapse
+                    ul.nav.navbar-nav
+                        li
+                            a(href='/logout') #{Tr("logout")}
+        div.filters
+            form.form-inline(action='/list')
+                select#marca.form-control(name='marca')
+                    option(value) Selecione a marca...
+                    option(value='Outros') Outros
+                    option(value='Honda') Honda
+                    option(value='Chevrolet') Chevrolet
+                    option(value='Ford') Ford
+                    option(value='Fiat') Fiat
+                    option(value='Toyota') Toyota
+                    option(value='Renault') Renault
+                    option(value='Nissan') Nissan
+                    option(value='Citroen') Citroen
+                    option(value='Volkswagen') Volkswagen
+                select#modelo.form-control(name='modelo')
+                    option(value) Selecione a modelo...
+                    option(value='Outros') Outros
+                    option(value='Civic') Civic
+                    option(value='City') City
+                    option(value='Corsa') Corsa
+                    option(value='Cobalt') Cobalt
+                    option(value='Corola') Corola
+                    option(value='Ecosport') Ecosport
+                    option(value='Fusion') Fusion
+                    option(value='Idea') Idea
+                    option(value='Logan') Logan
+                    option(value='Megane') Megane
+                    option(value='Palio') Palio
+                    option(value='Polo') Polo
+                    option(value='Meriva') Meriva
+                    option(value='Siena') Siena
+                    option(value='SpaceFox') SpaceFox
+                    option(value='Spin') Spin
+                    option(value='Versa') Versa
+                    option(value='Voyage') Voyage
+                    option(value='Zafira') Zafira
+                    option(value='C3') C3
+                select#combustivel.form-control(name='combustivel')
+                    option(value) Selecione o Combustivel...
+                    option(value='Alcool') Alcool
+                    option(value='Gasolina') Gasolina
+                    option(value='Flex') Flex
+                select#propriedade.form-control(name='propriedade')
+                    option(value) Selecione a Propriedade...
+                    option(value='Dono') Dono
+                    option(value='Frota') Frota
+                select#ano.form-control(name='ano')
+                    option(value) Selecione o Ano...
+                    option(value='2016') 2016
+                    option(value='2015') 2015
+                    option(value='2014') 2014
+                    option(value='2013') 2013
+                    option(value='2012') 2012
+                    option(value='2011') 2011
+                    option(value='2010') 2010
+                    option(value='2009') 2009
+                    option(value='2008') 2008
+                    option(value='2007') 2007
+                    option(value='2006') 2006
+                input#data-inicio.form-control(type='date', name='dataInicio', placeholder='Data de inicio')
+                input#data-fim.form-control(type='date', name='dataFim', placeholder='Data de fim')
+                button#filter-btn.btn.btn-default(type='submit') Filtrar
+        hr
+        #{Tr("rows")}: #{rows}
+        hr
+        table.table.table-bordered
+            thead
+                tr
+                    th #{Tr("id")}
+                    th #{Tr("brand")}
+                    th #{Tr("model")}
+                    th #{Tr("ano")}
+                    th #{Tr("gas")}
+                    th #{Tr("properties")}
+                    th #{Tr("data")}
+                    th #{Tr("local")}
+
+            tbody
+                each $car in access
+                    tr
+                        td #{$car.ID}
+                        td #{$car.Marca}
+                        td #{$car.Modelo}
+                        td #{$car.Ano}
+                        td #{$car.Combustivel}
+                        td #{$car.Propriedade}
+                        td #{$car.FormattedDate()}
+                        td <a target='_blank' href='http://maps.google.com/maps?z=28&q=#{$car.Latitude},#{$car.Longitude}'>Local</a>
+
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(src='/js/filter.js')
