@@ -14,7 +14,7 @@ type AccessRepository struct {
 	db *sqlx.DB
 }
 
-func NewAccessReposirory(cfg conf.Database) (*AccessRepository, error) {
+func NewAccessRepository(cfg conf.Database) (*AccessRepository, error) {
 	db, err := cfg.DB()
 	if err != nil {
 		return nil, err
