@@ -29,7 +29,10 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		Funcs:     template.FuncMaps(),
 	}))
 	app.Use(macaron.Renderer())
-	app.Use(cache.Cacher())
+	app.Use(cache.Cacher(cache.Options{
+		Adapter:       "file",
+		AdapterConfig: "data/caches",
+	}))
 	app.Use(session.Sessioner())
 	app.Use(context.Contexter())
 }
