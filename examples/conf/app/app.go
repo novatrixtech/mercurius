@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/go-macaron/binding"
-	"github.com/go-macaron/cache"
+	mcache "github.com/go-macaron/cache"
 	"github.com/go-macaron/gzip"
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/jade"
@@ -12,6 +12,8 @@ import (
 	"github.com/novatrixtech/mercurius/examples/lib/context"
 	"github.com/novatrixtech/mercurius/examples/lib/template"
 	"gopkg.in/macaron.v1"
+	"github.com/novatrixtech/mercurius/examples/lib/cache"
+	"github.com/novatrixtech/mercurius/examples/conf"
 )
 
 func SetupMiddlewares(app *macaron.Macaron) {
@@ -29,10 +31,9 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		Funcs:     template.FuncMaps(),
 	}))
 	app.Use(macaron.Renderer())
-	app.Use(cache.Cacher(cache.Options{
-		Adapter:       "file",
-		AdapterConfig: "data/caches",
-	}))
+	app.Use(mcache.Cacher(
+		cache.Option(conf.Cfg.Section("").Key("cache_adapter").Value()),
+	))
 	app.Use(session.Sessioner())
 	app.Use(context.Contexter())
 }

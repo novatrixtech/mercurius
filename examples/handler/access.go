@@ -63,8 +63,13 @@ func list(ctx *context.Context) ([]model.Access, error) {
 		fields["dataFim"] = dataFim
 
 	}
-	repo, err := repository.NewAccessRepository(conf.LoadMySQLConfig())
-	//repo, err := repository.NewAccessRepository(conf.LoadPostgreSQLConfig())
+	var cfg conf.Database
+	if conf.Cfg.Section("").Key("db_type").Value() == "mysql" {
+		cfg = conf.LoadMySQLConfig()
+	} else {
+		cfg = conf.LoadPostgreSQLConfig()
+	}
+	repo, err := repository.NewAccessRepository(cfg)
 	if err != nil {
 		return nil, err
 	}
