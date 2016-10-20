@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"bitbucket.org/novatrixbr/maquinataxiadmin/conf"
+	"github.com/novatrixtech/mercurius/examples/conf"
 	"github.com/go-macaron/cache"
 	_ "github.com/go-macaron/cache/memcache"
 	_ "github.com/go-macaron/cache/redis"
