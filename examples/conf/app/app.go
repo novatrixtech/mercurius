@@ -7,13 +7,13 @@ import (
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/jade"
 	"github.com/go-macaron/session"
+	"github.com/novatrixtech/mercurius/examples/conf"
 	"github.com/novatrixtech/mercurius/examples/handler"
 	"github.com/novatrixtech/mercurius/examples/lib/auth"
+	"github.com/novatrixtech/mercurius/examples/lib/cache"
 	"github.com/novatrixtech/mercurius/examples/lib/context"
 	"github.com/novatrixtech/mercurius/examples/lib/template"
 	"gopkg.in/macaron.v1"
-	"github.com/novatrixtech/mercurius/examples/lib/cache"
-	"github.com/novatrixtech/mercurius/examples/conf"
 )
 
 func SetupMiddlewares(app *macaron.Macaron) {
