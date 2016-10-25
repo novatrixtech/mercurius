@@ -1,9 +1,9 @@
 package conf
 
 import (
-	"github.com/go-macaron/macaron"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/ini.v1"
+	"gopkg.in/macaron.v1"
 )
 
 type Database interface {
