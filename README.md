@@ -5,11 +5,11 @@ Get a Go web application template with: Internationalization, Routers, Logging, 
 
 # Getting Started
 
-```go get -v github.com/novatrixtech/mercurius```
+```go get -v github.com/novatrixtech/mercurius/...```
 
 ```go install github.com/novatrixtech/mercurius```
 
-```mercurius new github.com/novatrixtech/newproject```
+```mercurius new```
 
 # Structure of a Project
 ```

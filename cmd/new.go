@@ -18,16 +18,12 @@ var newCmd = &cobra.Command{
 	Long:  `Create a new mercurius project`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
-		if len(args) == 0 {
-			fmt.Println("No import path given")
-			os.Exit(-1)
-		}
-		if len(args) > 1 {
+		if len(args) > 0 {
 			fmt.Println(os.Stderr, "Too many arguments")
 			os.Exit(-1)
 		}
 		initGoPaths()
-		setApplicationPath(args)
+		setApplicationPath()
 		copyNewAppFiles(confValues())
 	},
 }
@@ -91,9 +87,13 @@ func initGoPaths() {
 	srcRoot = filepath.Join(srcRoot, "src")
 }
 
-func setApplicationPath(args []string) {
+func setApplicationPath() {
 	var err error
-	importPath = args[0]
+	importPath = terminal("What is application path?", "")
+	if importPath == "" {
+		fmt.Println("Abort: could not create a Mercurius application with empty application path.")
+		os.Exit(-1)
+	}
 
 	// validate relative path, we cannot use built-in functions
 	// since Go import path is valid relative path too.

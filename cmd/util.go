@@ -11,6 +11,7 @@ import (
 	"text/template"
 )
 
+//copy flies from src to dest
 func mustCopyFile(destFilename, srcFilename string) {
 	destFile, err := os.Create(destFilename)
 	if err != nil {
@@ -38,6 +39,7 @@ func mustCopyFile(destFilename, srcFilename string) {
 	}
 }
 
+// parse template and change to new app data
 func mustRenderTemplate(destPath, srcPath string, data map[string]interface{}) {
 	tmpl, err := template.ParseFiles(srcPath)
 	if err != nil {
@@ -60,9 +62,7 @@ func mustRenderTemplate(destPath, srcPath string, data map[string]interface{}) {
 	}
 }
 
-// copyDir copies a directory tree over to a new directory.  Any files ending in
-// ".template" are treated as a Go template and rendered using the given data.
-// Additionally, the trailing ".template" is stripped from the file name.
+// copyDir copies a directory tree over to a new directory
 // Also, dot files and dot directories are skipped.
 func mustCopyDir(destDir, srcDir string, data map[string]interface{}) error {
 	return filepath.Walk(srcDir, func(srcPath string, info os.FileInfo, err error) error {
