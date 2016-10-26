@@ -90,7 +90,14 @@ func mustCopyDir(destDir, srcDir string, data map[string]interface{}) error {
 			return nil
 		}
 
-		mustRenderTemplate(destPath, srcPath, data)
+		// If this file ends in ".template", render it as a template.
+		if strings.HasSuffix(relSrcPath, ".template") {
+			mustRenderTemplate(destPath[:len(destPath)-len(".template")], srcPath, data)
+			return nil
+		}
+
+		// Else, just copy it over.
+		mustCopyFile(destPath, srcPath)
 		return nil
 	})
 }
