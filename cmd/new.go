@@ -89,7 +89,19 @@ func initGoPaths() {
 
 func setApplicationPath() {
 	var err error
-	importPath = terminal("What is application path?", "")
+	appName = terminal("What is your application name?", "")
+	gitPath := terminal("What is your git or mercurial host?", "github.com")
+	gitUser := terminal("What is your git or mercurial username?", "")
+
+	//check if gitUser is not empty to put gitUser between slashes
+	if gitUser != "" {
+		gitUser = fmt.Sprintf("/%s", gitUser)
+	}
+
+	//build import path
+	importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
+
+	//check if import path is valid
 	if importPath == "" {
 		fmt.Println("Abort: could not create a Mercurius application with empty application path.")
 		os.Exit(-1)
@@ -113,7 +125,6 @@ func setApplicationPath() {
 	}
 
 	appPath = filepath.Join(srcRoot, filepath.FromSlash(importPath))
-	appName = filepath.Base(appPath)
 	basePath = filepath.ToSlash(filepath.Dir(importPath))
 
 	if basePath == "." {
