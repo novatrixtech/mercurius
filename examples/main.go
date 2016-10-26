@@ -1,3 +1,4 @@
+// app example generated using Mercurius
 package main
 
 import (
