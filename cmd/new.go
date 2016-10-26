@@ -4,18 +4,18 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"go/build"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"go/build"
 )
 
 // newCmd represents the new command
 var newCmd = &cobra.Command{
 	Use:   "new",
 	Short: "Create a new mercurius project",
-	Long: `Create a new mercurius project`,
+	Long:  `Create a new mercurius project`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
 		if len(args) == 0 {
@@ -32,19 +32,19 @@ var newCmd = &cobra.Command{
 	},
 }
 
-const mercuriusPath  = "github.com/novatrixtech/mercurius"
+const mercuriusPath = "github.com/novatrixtech/mercurius"
 
 var (
 	// go related paths
-	gopath string
+	gopath  string
 	srcRoot string
 
 	// mercurius related paths
-	mercuriusPkg     *build.Package
-	appPath string
-	appName string
-	basePath string
-	importPath string
+	mercuriusPkg *build.Package
+	appPath      string
+	appName      string
+	basePath     string
+	importPath   string
 	skeletonPath string
 )
 
@@ -53,7 +53,7 @@ func initGoPaths() {
 	// lookup go path
 	gopath = build.Default.GOPATH
 	if gopath == "" {
-		fmt.Fprintln(os.Stderr, "Abort: GOPATH environment variable is not set. " +
+		fmt.Println("Abort: GOPATH environment variable is not set. " +
 			"Please refer to http://golang.org/doc/code.html to configure your Go environment.")
 	}
 
@@ -127,8 +127,6 @@ func setApplicationPath(args []string) {
 	skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
 }
 
-
-
 func copyNewAppFiles(cfgs map[string]interface{}) {
 	var err error
 	err = os.MkdirAll(appPath, 0777)
@@ -148,9 +146,9 @@ func confValues() map[string]interface{} {
 	// Define default value for cache types
 	// See https://go-macaron.com/docs/middlewares/cache for details
 	cacheMap := map[string]string{
-		"memory": "",
-		"file": "data/caches",
-		"redis": "addr=127.0.0.1:6379",
+		"memory":   "",
+		"file":     "data/caches",
+		"redis":    "addr=127.0.0.1:6379",
 		"memcache": "127.0.0.1:11211",
 	}
 

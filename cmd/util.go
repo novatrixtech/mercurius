@@ -1,17 +1,15 @@
 package cmd
 
 import (
-	"os"
-	"strings"
-	"path"
-	"path/filepath"
-	"io"
-	"text/template"
 	"bufio"
 	"fmt"
+	"io"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
+	"text/template"
 )
-
-
 
 func mustCopyFile(destFilename, srcFilename string) {
 	destFile, err := os.Create(destFilename)
