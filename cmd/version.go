@@ -14,6 +14,7 @@ var versionCmd = &cobra.Command{
 	Short: "Version of Mercurius",
 	Long: `Version of Mercurius`,
 	Run: func(cmd *cobra.Command, args []string) {
+		//print version of mercurius
 		fmt.Println("Mercurius version", VERSION)
 	},
 }
