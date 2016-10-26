@@ -55,6 +55,7 @@ func initGoPaths() {
 	if gopath == "" {
 		fmt.Println("Abort: GOPATH environment variable is not set. " +
 			"Please refer to http://golang.org/doc/code.html to configure your Go environment.")
+		os.Exit(-1)
 	}
 
 	// check for go executable
@@ -62,6 +63,7 @@ func initGoPaths() {
 	_, err = exec.LookPath("go")
 	if err != nil {
 		fmt.Println("Go executable not found in PATH.")
+		os.Exit(-1)
 	}
 
 	//support relative path
