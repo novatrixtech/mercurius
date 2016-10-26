@@ -180,7 +180,7 @@ func confValues() map[string]interface{} {
 	cache := terminal("What cache do you want to use?", "memory")
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
-	cfgs["Key"] = terminal("What is your oauth key", "")
+	cfgs["Key"] = terminal("What is your oauth key (key size must be 16 or 32)?", "")
 	return cfgs
 }
 
