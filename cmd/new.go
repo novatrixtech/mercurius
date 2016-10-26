@@ -19,7 +19,7 @@ var newCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
 		if len(args) > 0 {
-			fmt.Println(os.Stderr, "Too many arguments")
+			fmt.Println("Too many arguments")
 			os.Exit(-1)
 		}
 		initGoPaths()
