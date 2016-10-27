@@ -32,7 +32,7 @@ func (db *PostgreSQL) DB() (*sqlx.DB, error) {
 			return nil, err
 		}
 		DB.SetMaxIdleConns(numIdle)
-		max := Cfg.Section("").Key("idle_conn").Value()
+		max := Cfg.Section("").Key("max_conn").Value()
 		numMax, err := strconv.Atoi(max)
 		if err != nil {
 			return nil, err
