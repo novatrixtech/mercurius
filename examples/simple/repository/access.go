@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/go-macaron/cache"
 	"github.com/jmoiron/sqlx"
-	"github.com/novatrixtech/mercurius/examples/conf"
-	"github.com/novatrixtech/mercurius/examples/model"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/model"
 	"strconv"
 	"time"
 )

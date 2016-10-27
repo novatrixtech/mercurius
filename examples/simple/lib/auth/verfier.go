@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/novatrixtech/mercurius/examples/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 )
 
 const cookie_name = "mercuriusAuth"

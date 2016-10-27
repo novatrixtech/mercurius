@@ -4,7 +4,7 @@ import (
 	"github.com/go-macaron/cache"
 	_ "github.com/go-macaron/cache/memcache"
 	_ "github.com/go-macaron/cache/redis"
-	"github.com/novatrixtech/mercurius/examples/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
 )
 
 var (

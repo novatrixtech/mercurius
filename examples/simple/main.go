@@ -4,7 +4,7 @@ package main
 import (
 	"gopkg.in/macaron.v1"
 
-	conf "github.com/novatrixtech/mercurius/examples/conf/app"
+	conf "github.com/novatrixtech/mercurius/examples/simple/conf/app"
 )
 
 func main() {

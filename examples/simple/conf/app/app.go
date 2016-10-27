@@ -7,12 +7,12 @@ import (
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/jade"
 	"github.com/go-macaron/session"
-	"github.com/novatrixtech/mercurius/examples/conf"
-	"github.com/novatrixtech/mercurius/examples/handler"
-	"github.com/novatrixtech/mercurius/examples/lib/auth"
-	"github.com/novatrixtech/mercurius/examples/lib/cache"
-	"github.com/novatrixtech/mercurius/examples/lib/context"
-	"github.com/novatrixtech/mercurius/examples/lib/template"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/handler"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/cache"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/template"
 	"gopkg.in/macaron.v1"
 )
 

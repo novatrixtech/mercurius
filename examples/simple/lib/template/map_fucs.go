@@ -3,7 +3,7 @@ package template
 import (
 	"html/template"
 
-	"github.com/novatrixtech/mercurius/examples/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 )
 
 func FuncMaps() []template.FuncMap {

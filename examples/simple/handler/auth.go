@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/novatrixtech/mercurius/examples/conf"
-	"github.com/novatrixtech/mercurius/examples/lib/auth"
-	"github.com/novatrixtech/mercurius/examples/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 	"net/http"
 )
 

@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/novatrixtech/mercurius/examples/conf"
-	"github.com/novatrixtech/mercurius/examples/lib/context"
-	"github.com/novatrixtech/mercurius/examples/lib/query"
-	"github.com/novatrixtech/mercurius/examples/model"
-	"github.com/novatrixtech/mercurius/examples/repository"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/query"
+	"github.com/novatrixtech/mercurius/examples/simple/model"
+	"github.com/novatrixtech/mercurius/examples/simple/repository"
 	"log"
 )
 
