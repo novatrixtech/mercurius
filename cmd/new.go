@@ -112,16 +112,18 @@ func setApplicationPath() {
 	// so check basic part of the path, which is "."
 	if filepath.IsAbs(importPath) || strings.HasPrefix(importPath, ".") {
 		fmt.Printf("Abort: '%s' looks like a directory.  Please provide a Go import path instead.\n", importPath)
+		os.Exit(-1)
 	}
 
 	_, err = build.Import(importPath, "", build.FindOnly)
 	if err == nil {
-		fmt.Printf("Abort: Import path %s already exists.\n", importPath)
+		fmt.Printf("Alert: Import path %s already exists.\n", importPath)
 	}
 
 	mercuriusPkg, err = build.Import(mercuriusPath, "", build.FindOnly)
 	if err != nil {
 		fmt.Printf("Abort: Could not find Mercurius source code: %s\n", err)
+		os.Exit(-1)
 	}
 
 	appPath = filepath.Join(srcRoot, filepath.FromSlash(importPath))
