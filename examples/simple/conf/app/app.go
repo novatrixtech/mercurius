@@ -7,6 +7,7 @@ import (
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/jade"
 	"github.com/go-macaron/session"
+	"github.com/go-macaron/toolbox"
 	"github.com/novatrixtech/mercurius/examples/simple/conf"
 	"github.com/novatrixtech/mercurius/examples/simple/handler"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
@@ -20,6 +21,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
 	app.Use(gzip.Gziper())
+	app.Use(toolbox.Toolboxer(app))
 	app.Use(macaron.Static("public"))
 	app.Use(i18n.I18n(i18n.Options{
 		Directory: "locale",
