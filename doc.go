@@ -46,5 +46,5 @@ Structure of a Project
  main.go
  Application entry
 "
- */
+*/
 package main

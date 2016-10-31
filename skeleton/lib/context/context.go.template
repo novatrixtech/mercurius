@@ -4,6 +4,7 @@ import (
 	"github.com/go-macaron/cache"
 	"github.com/go-macaron/jade"
 	"github.com/go-macaron/session"
+	"github.com/go-macaron/toolbox"
 	"gopkg.in/macaron.v1"
 	"net/http"
 )
@@ -16,6 +17,7 @@ type Context struct {
 	Session session.Store
 	Flash   *session.Flash
 	Cache   cache.Cache
+	Toolbox toolbox.Toolbox
 }
 
 func (ctx *Context) HasError() bool {
@@ -38,13 +40,14 @@ func (ctx *Context) RenderWithErr(msg string, tpl string, userForm interface{}) 
 }
 
 func Contexter() macaron.Handler {
-	return func(c *macaron.Context, r jade.Render, session session.Store, flash *session.Flash, cache cache.Cache) {
+	return func(c *macaron.Context, r jade.Render, session session.Store, flash *session.Flash, cache cache.Cache, toolbox toolbox.Toolbox) {
 		ctx = &Context{
 			Context: c,
 			render:  r,
 			Session: session,
 			Flash:   flash,
 			Cache:   cache,
+			Toolbox: toolbox,
 		}
 		c.Map(ctx)
 	}
