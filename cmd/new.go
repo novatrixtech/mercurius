@@ -183,6 +183,7 @@ func confValues() map[string]interface{} {
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 16 or 32)?", "")
+	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
 	return cfgs
 }
 
