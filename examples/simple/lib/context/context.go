@@ -30,13 +30,22 @@ func (ctx *Context) HasError() bool {
 	return hasErr.(bool)
 }
 
-func (ctx *Context) RenderWithErr(msg string, tpl string, userForm interface{}) {
+func (ctx *Context) withErr(msg string, userForm interface{}) {
 	if userForm != nil {
 		AssignForm(userForm, ctx.Data)
 	}
 	ctx.Flash.ErrorMsg = msg
 	ctx.Data["flash"] = ctx.Flash
+}
+
+func (ctx *Context) RenderWithErr(msg string, tpl string, userForm interface{}) {
+	ctx.withErr(msg, userForm)
 	ctx.HTML(http.StatusOK, tpl)
+}
+
+func (ctx *Context) NativeRenderWithErr(msg string, tpl string, userForm interface{}) {
+	ctx.withErr(msg, userForm)
+	ctx.NativeHTML(http.StatusOK, tpl)
 }
 
 func Contexter() macaron.Handler {
@@ -55,6 +64,10 @@ func Contexter() macaron.Handler {
 
 func (ctx *Context) HTML(status int, name string) {
 	ctx.render.HTML(status, name, ctx.Data)
+}
+
+func (ctx *Context) NativeHTML(status int, name string)  {
+	ctx.Context.HTML(status, name, ctx.Data)
 }
 
 func I18n(key string) string {
