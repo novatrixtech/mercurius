@@ -32,7 +32,10 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		Directory: "public/templates",
 		Funcs:     template.FuncMaps(),
 	}))
-	app.Use(macaron.Renderer())
+	app.Use(macaron.Renderer(macaron.RenderOptions{
+		Directory: "public/templates",
+		Funcs:     template.FuncMaps(),
+	}))
 	app.Use(mcache.Cacher(
 		cache.Option(conf.Cfg.Section("").Key("cache_adapter").Value()),
 	))
