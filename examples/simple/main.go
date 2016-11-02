@@ -4,8 +4,8 @@ package main
 import (
 	"gopkg.in/macaron.v1"
 
-	conf "github.com/novatrixtech/mercurius/examples/simple/conf/app"
 	config "github.com/novatrixtech/mercurius/examples/simple/conf"
+	conf "github.com/novatrixtech/mercurius/examples/simple/conf/app"
 	"os"
 	"strconv"
 )

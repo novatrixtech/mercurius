@@ -66,7 +66,7 @@ func (ctx *Context) HTML(status int, name string) {
 	ctx.render.HTML(status, name, ctx.Data)
 }
 
-func (ctx *Context) NativeHTML(status int, name string)  {
+func (ctx *Context) NativeHTML(status int, name string) {
 	ctx.Context.HTML(status, name, ctx.Data)
 }
 

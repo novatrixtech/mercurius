@@ -5,6 +5,8 @@ import (
 
 	conf "{{.AppPath}}/conf/app"
 	config "{{.AppPath}}/conf"
+	"os"
+    "strconv"
 )
 
 func main() {
