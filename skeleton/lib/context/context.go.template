@@ -31,11 +31,7 @@ func (ctx *Context) HasError() bool {
 }
 
 func (ctx *Context) RenderWithErr(msg string, tpl string, userForm interface{}) {
-	if userForm != nil {
-		AssignForm(userForm, ctx.Data)
-	}
-	ctx.Flash.ErrorMsg = msg
-	ctx.Data["flash"] = ctx.Flash
+	ctx.withErr(msg, userForm)
 	ctx.HTML(http.StatusOK, tpl)
 }
 
