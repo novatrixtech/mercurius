@@ -32,7 +32,7 @@ func Oauth(ctx *context.Context) {
 		Id:     id,
 		Secret: secret,
 	}
-	appName, appID := auth.ClientDecrypter(key, id, secret)
+	appName, appID, _ := auth.ClientDecrypter(key, id, secret)
 	data := auth.DB[credentials]
 	if data.Id == appID && data.Name == appName {
 		token := auth.GenerateJWTToken(data, ctx)

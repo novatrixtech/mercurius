@@ -52,22 +52,22 @@ func generateJWTToken(jwtID string, ip string, issuer string) string {
 	return signedToken
 }
 
-func ClientDecrypter(key, clientID, clientSecret string) (name, id string) {
+func ClientDecrypter(key, clientID, clientSecret string) (name, id string, err error) {
 	secret, _ := hex.DecodeString(clientSecret)
 	cid, _ := hex.DecodeString(clientID)
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {
-		panic(err.Error())
+		return "", "", err
 	}
 
 	aesgcm, err := cipher.NewGCM(block)
 	if err != nil {
-		panic(err.Error())
+		return "", "", err
 	}
 
 	text, err := aesgcm.Open(nil, secret, cid, nil)
 	if err != nil {
-		panic(err.Error())
+		return "", "", err
 	}
 	values := strings.Split(string(text), "|")
 	name = values[0]
