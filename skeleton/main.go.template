@@ -13,10 +13,6 @@ func main() {
 	app := macaron.New()
 	conf.SetupMiddlewares(app)
 	conf.SetupRoutes(app)
-	port, err := config.Cfg.Section("").Key("http_port").Int()
-    if err != nil {
-    	panic(err)
-    }
     app.Run(port())
 }
 
