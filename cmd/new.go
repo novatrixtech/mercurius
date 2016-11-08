@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -25,6 +26,7 @@ var newCmd = &cobra.Command{
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
+		packageStateCheck()
 	},
 }
 
@@ -146,7 +148,8 @@ func copyNewAppFiles(cfgs map[string]interface{}) {
 	var err error
 	err = os.MkdirAll(appPath, 0777)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Abort: Could not generate app %s\n", err)
+		os.Exit(-1)
 	}
 
 	mustCopyDir(appPath, skeletonPath, cfgs)
@@ -185,6 +188,31 @@ func confValues() map[string]interface{} {
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 16 or 32)?", "")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
 	return cfgs
+}
+
+func packageStateCheck() {
+	pkg, err := build.Import(importPath, "", build.FindOnly)
+	if err != nil {
+		fmt.Printf("Abort: Could not find generated app: %s\n", err)
+		os.Exit(-1)
+	}
+	cmd := exec.Command("go", "build", pkg.ImportPath)
+	out, _ := cmd.CombinedOutput()
+	msg := string(out)
+	fmt.Println(msg)
+	if msg != "" {
+		if runtime.GOOS == "windows" {
+			cmd = exec.Command("rd", "/s", "/q", pkg.Dir)
+		} else {
+			cmd = exec.Command("rm", "-rf", pkg.Dir)
+		}
+		err := cmd.Run()
+		if err != nil {
+			fmt.Printf("Abort: %s\n", err)
+			os.Exit(-1)
+		}
+	}
+
 }
 
 func init() {
