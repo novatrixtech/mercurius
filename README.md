@@ -94,7 +94,7 @@ func User(ctx *context.Context) {
 ```
 The extension of the templates must be `.jade`. Put the jade files inside public/templates folder
 
-- handle Golang HTML Template Engine
+- handle Go HTML Template Engine
 ```go
 import (
         "net/http"
@@ -105,7 +105,7 @@ func User(ctx *context.Context) {
         ctx.NativeHTML(http.StatusOk, "edit")
 }
 ```
-The extension of the templates must be `.tmpl or .html`. Put the jade files inside public/templates folder
+The extension of the templates must be `.tmpl or .html`. Put the Go template files inside public/templates folder
 
 # Creating a route
 Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
