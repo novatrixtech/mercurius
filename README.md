@@ -65,6 +65,7 @@ import (
 )
 
 func User(ctx *context.Context) {
+	//user is the struct you want to return
         ctx.JSON(http.StatusOk, user)
 }
 ```
@@ -77,11 +78,14 @@ import (
 )
 
 func User(ctx *context.Context) {
+	//user is the struct you want to return
         ctx.XML(http.StatusOk, user)
 }
 ```
 
 - handle Jade HTML Template Engine
+
+The extension of the templates must be `.jade`. Put the jade files inside public/templates folder
 ```go
 import (
         "net/http"
@@ -89,12 +93,14 @@ import (
 )
 
 func User(ctx *context.Context) {
+	//edit is the page name you want to render
         ctx.HTML(http.StatusOk, "edit")
 }
 ```
-The extension of the templates must be `.jade`. Put the jade files inside public/templates folder
 
 - handle Go HTML Template Engine
+
+The extension of the templates must be `.tmpl or .html`. Put the Go template files inside public/templates folder
 ```go
 import (
         "net/http"
@@ -102,10 +108,10 @@ import (
 )
 
 func User(ctx *context.Context) {
+	//edit is the page name you want to render
         ctx.NativeHTML(http.StatusOk, "edit")
 }
 ```
-The extension of the templates must be `.tmpl or .html`. Put the Go template files inside public/templates folder
 
 # Creating a route
 Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
@@ -115,7 +121,7 @@ func SetupRoutes(app *macaron.Macaron) {
 		app.Get("/", handler.ListAccessPage)
 	}, auth.LoginRequired)
 	app.Get("/login", handler.LoginPage)
-	app.Post("/login", binding.BindIgnErr(context.Login{}), handler.BasicAuth)
+	app.Post("/login", binding.BindIgnErr(model.Login), handler.BasicAuth)
 	})
 
 }
