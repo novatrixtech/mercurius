@@ -38,11 +38,85 @@ Models
 Web resources that are publicly available
 
 /public/templates
-Jade templates
+Jade templates or Native templates
 
 /repository
 Database comunication following repository pattern
 
 main.go
 Application entry
+```
+
+# Creating a handler
+Put all handler files inside the handler folder
+
+- handle raw text
+```go
+func Hello() string {
+        return "Hello"
+}
+```
+
+- handle JSON
+```go
+import (
+        "net/http"
+        "{{.AppPath}}/lib/context"
+)
+
+func User(ctx *context.Context) {
+        ctx.JSON(http.StatusOk, user)
+}
+```
+
+- handle XML
+```go
+import (
+        "net/http"
+        "{{.AppPath}}/lib/context"
+)
+
+func User(ctx *context.Context) {
+        ctx.XML(http.StatusOk, user)
+}
+```
+
+- handle Jade HTML Template Engine
+```go
+import (
+        "net/http"
+        "{{.AppPath}}/lib/context"
+)
+
+func User(ctx *context.Context) {
+        ctx.HTML(http.StatusOk, "edit")
+}
+```
+The extension of the templates must be `.jade`. Put the jade files inside public/templates folder
+
+- handle Golang HTML Template Engine
+```go
+import (
+        "net/http"
+        "{{.AppPath}}/lib/context"
+)
+
+func User(ctx *context.Context) {
+        ctx.NativeHTML(http.StatusOk, "edit")
+}
+```
+The extension of the templates must be `.tmpl or .html`. Put the jade files inside public/templates folder
+
+# Creating a route
+Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
+```go
+func SetupRoutes(app *macaron.Macaron) {
+	app.Group("", func() {
+		app.Get("/", handler.ListAccessPage)
+	}, auth.LoginRequired)
+	app.Get("/login", handler.LoginPage)
+	app.Post("/login", binding.BindIgnErr(context.Login{}), handler.BasicAuth)
+	})
+
+}
 ```
