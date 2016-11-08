@@ -47,17 +47,31 @@ main.go
 Application entry
 ```
 
-# Creating a handler
+# Creating routes
+Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
+```go
+func SetupRoutes(app *macaron.Macaron) {
+	app.Group("", func() {
+		app.Get("/", handler.ListAccessPage)
+	}, auth.LoginRequired)
+	app.Get("/login", handler.LoginPage)
+	app.Post("/login", binding.BindIgnErr(model.Login), handler.BasicAuth)
+	})
+
+}
+```
+
+# Creating handlers for the routers
 Put all handler files inside the handler folder
 
-- handle raw text
+- **Handle raw text**
 ```go
 func Hello() string {
         return "Hello"
 }
 ```
 
-- handle JSON
+- **Handle JSON**
 ```go
 import (
         "net/http"
@@ -70,7 +84,7 @@ func User(ctx *context.Context) {
 }
 ```
 
-- handle XML
+- **Handle XML**
 ```go
 import (
         "net/http"
@@ -83,7 +97,7 @@ func User(ctx *context.Context) {
 }
 ```
 
-- handle Jade HTML Template Engine
+- **Handle Jade HTML Template Engine**
 
 The extension of the templates must be `.jade`. Put the jade files inside public/templates folder
 ```go
@@ -98,7 +112,7 @@ func User(ctx *context.Context) {
 }
 ```
 
-- handle Go HTML Template Engine
+- **Handle Go HTML Template Engine**
 
 The extension of the templates must be `.tmpl or .html`. Put the Go template files inside public/templates folder
 ```go
@@ -110,19 +124,5 @@ import (
 func User(ctx *context.Context) {
 	//edit is the page name you want to render
         ctx.NativeHTML(http.StatusOk, "edit")
-}
-```
-
-# Creating a route
-Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
-```go
-func SetupRoutes(app *macaron.Macaron) {
-	app.Group("", func() {
-		app.Get("/", handler.ListAccessPage)
-	}, auth.LoginRequired)
-	app.Get("/login", handler.LoginPage)
-	app.Post("/login", binding.BindIgnErr(model.Login), handler.BasicAuth)
-	})
-
 }
 ```
