@@ -7,6 +7,7 @@ import (
 	config "{{.AppPath}}/conf"
 	"os"
     "strconv"
+    "log"
 )
 
 func main() {
@@ -17,14 +18,16 @@ func main() {
 }
 
 func port() int {
-    port, err := config.Cfg.Section("").Key("http_port").Int()
-    if err != nil {
-        panic(err)
-   }
-   if macaron.Env != macaron.DEV {
-        if i, err := strconv.Atoi(os.Getenv("PORT")); err == nil {
-            port = i
-    	}
-    }
-    return port
+	port, err := config.Cfg.Section("").Key("http_port").Int()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if forceLocal, _ := config.Cfg.Section("").Key("http_port_local").Bool(); forceLocal==false {
+		if i, err := strconv.Atoi(os.Getenv("PORT")); err == nil {
+			port = i
+		}
+	}
+
+	return port
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/go-macaron/toolbox"
 	"gopkg.in/macaron.v1"
 	"net/http"
+	"encoding/json"
+    "log"
 )
 
 var ctx *Context
@@ -68,6 +70,18 @@ func (ctx *Context) HTML(status int, name string) {
 
 func (ctx *Context) NativeHTML(status int, name string) {
 	ctx.Context.HTML(status, name, ctx.Data)
+}
+
+func (ctx *Context) JSONWithoutEscape(status int, obj interface{}) {
+	ret, err := json.Marshal(&obj)
+	if err != nil {
+		log.Print("[JSONWithoutEscape]" + err.Error())
+		http.Error(ctx.Resp, "{'errors':'JSON Marshaling Error = "+err.Error()+"'}", 500)
+		return
+	}
+
+	log.Println("[JSONWithoutEscape] Returned object: " + string(ret))
+	ctx.Resp.Write(ret)
 }
 
 func I18n(key string) string {

@@ -10,3 +10,4 @@ idle_conn = {{.IdleConn}}
 cache_adapter = {{.CacheType}}
 cache_adapter_config = {{.CacheCfgs}}
 http_port = {{.HttpPort}}
+http_port_local = false
