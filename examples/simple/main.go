@@ -8,6 +8,7 @@ import (
 	conf "github.com/novatrixtech/mercurius/examples/simple/conf/app"
 	"os"
 	"strconv"
+	"log"
 )
 
 func main() {
@@ -20,12 +21,14 @@ func main() {
 func port() int {
 	port, err := config.Cfg.Section("").Key("http_port").Int()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	if macaron.Env != macaron.DEV {
+
+	if forceLocal, _ := config.Cfg.Section("").Key("http_port_local").Bool(); forceLocal==false {
 		if i, err := strconv.Atoi(os.Getenv("PORT")); err == nil {
 			port = i
 		}
 	}
+
 	return port
 }
