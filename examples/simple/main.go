@@ -16,7 +16,6 @@ func main() {
 	app := macaron.New()
 	conf.SetupMiddlewares(app)
 	conf.SetupRoutes(app)
-	app.Run(port())
 	/*
 		Generated using http://www.kammerl.de/ascii/AsciiSignature.php - (Font: 'starwars')
 		All signatures are made with FIGlet (c) 1991, 1993, 1994 Glenn Chappell and Ian Chai
@@ -30,6 +29,8 @@ func main() {
 	log.Println("|  |\\/|  | |   __|  |      /     |  |     |  |  |  | |      /     |  | |  |  |  |     \\   \\       | | | |    > _ < ")
 	log.Println("|  |  |  | |  |____ |  |\\  \\----.|  `----.|  `--'  | |  |\\  \\----.|  | |  `--'  | .----)   |      | |_| |  _| (_) |")
 	log.Println("|__|  |__| |_______|| _| `._____| \\______| \\______/  | _| `._____||__|  \\______/  |_______/        \\___/  (__)___/ ")
+
+	app.Run(port())
 }
 
 func port() int {
