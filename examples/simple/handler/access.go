@@ -3,12 +3,12 @@ package handler
 import (
 	"net/http"
 
-	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"log"
+
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/query"
 	"github.com/novatrixtech/mercurius/examples/simple/model"
 	"github.com/novatrixtech/mercurius/examples/simple/repository"
-	"log"
 )
 
 func ListAccessPage(ctx *context.Context) {
@@ -63,13 +63,8 @@ func list(ctx *context.Context) ([]model.Access, error) {
 		fields["dataFim"] = dataFim
 
 	}
-	var cfg conf.Database
-	if conf.Cfg.Section("").Key("db_type").Value() == "mysql" {
-		cfg = conf.LoadMySQLConfig()
-	} else {
-		cfg = conf.LoadPostgreSQLConfig()
-	}
-	repo, err := repository.NewAccessRepository(cfg)
+
+	repo, err := repository.NewAccessRepository()
 	if err != nil {
 		return nil, err
 	}
