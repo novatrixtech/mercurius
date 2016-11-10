@@ -1,16 +1,13 @@
 package conf
 
 import (
-	"github.com/jmoiron/sqlx"
 	"gopkg.in/ini.v1"
 	"gopkg.in/macaron.v1"
 )
 
-type Database interface {
-	DSN() string
-	DB() (*sqlx.DB, error)
-}
-
+/*
+Cfg - configuration file content
+*/
 var Cfg *ini.File
 
 func init() {

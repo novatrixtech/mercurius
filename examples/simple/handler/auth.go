@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/novatrixtech/mercurius/examples/simple/conf"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
-	"net/http"
 )
 
 func LoginPage(ctx *context.Context) {
