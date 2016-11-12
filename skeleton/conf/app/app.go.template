@@ -8,6 +8,7 @@ import (
 	"github.com/go-macaron/session"
 	"github.com/go-macaron/toolbox"
 	"{{.AppPath}}/conf"
+	"{{.AppPath}}/handler"
 	"{{.AppPath}}/lib/cache"
 	"{{.AppPath}}/lib/context"
 	"{{.AppPath}}/lib/template"
@@ -18,7 +19,11 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
 	app.Use(gzip.Gziper())
-	app.Use(toolbox.Toolboxer(app))
+	app.Use(toolbox.Toolboxer(app, toolbox.Options{
+		HealthCheckers: []toolbox.HealthChecker{
+			new(handler.AppChecker),
+		},
+	}))
 	app.Use(macaron.Static("public"))
 	app.Use(i18n.I18n(i18n.Options{
 		Directory: "locale",
