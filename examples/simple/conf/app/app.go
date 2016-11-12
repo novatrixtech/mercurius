@@ -21,7 +21,11 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
 	app.Use(gzip.Gziper())
-	app.Use(toolbox.Toolboxer(app))
+	app.Use(toolbox.Toolboxer(app, toolbox.Options{
+		HealthCheckers: []toolbox.HealthChecker{
+			new(handler.AppChecker),
+		},
+	}))
 	app.Use(macaron.Static("public"))
 	app.Use(i18n.I18n(i18n.Options{
 		Directory: "locale",
