@@ -22,7 +22,7 @@ Desc - HealthChecker App Description
 func (dc *AppChecker) Desc() string {
 	t := time.Now()
 	t.Format("2006-01-02 15:04:05")
-	return "[1] [panelinteractiveapigo] Tudo Certo em " + t.String()
+	return "[1] [mercurius] Tudo Certo em " + t.String()
 }
 
 /*
