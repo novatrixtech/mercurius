@@ -11,6 +11,7 @@ import (
 	conf "{{.AppPath}}/conf/app"
 )
 
+// application entrypoint
 func main() {
 	app := macaron.New()
 	conf.SetupMiddlewares(app)
@@ -32,6 +33,7 @@ func main() {
 	app.Run(port())
 }
 
+// configure http port
 func port() int {
 	port, err := config.Cfg.Section("").Key("http_port").Int()
 	if err != nil {

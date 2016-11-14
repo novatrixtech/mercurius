@@ -6,6 +6,7 @@ import (
 	"{{.AppPath}}/lib/context"
 )
 
+// FuncMaps to view
 func FuncMaps() []template.FuncMap {
 	return []template.FuncMap{
 		map[string]interface{}{

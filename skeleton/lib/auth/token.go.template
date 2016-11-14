@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// CreateJWTCookie create cookie with jwt token
 func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
 	ip := ctx.RemoteAddr()
 	expireCookie := time.Now().Add(time.Hour * 1)
@@ -22,11 +23,13 @@ func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
 
 }
 
+// GenerateJWTToken generate jwt token
 func GenerateJWTToken(app *App, ctx *context.Context) string {
 	ip := ctx.RemoteAddr()
 	return generateJWTToken(app.Id, ip, app.Name)
 }
 
+// InvalidateJWTToken invalidate jwt token
 func InvalidateJWTToken(ctx *context.Context) {
 	deleteCookie := http.Cookie{Name: cookie_name, Value: "none", Expires: time.Now()}
 	http.SetCookie(ctx.Resp, &deleteCookie)
@@ -52,6 +55,7 @@ func generateJWTToken(jwtID string, ip string, issuer string) string {
 	return signedToken
 }
 
+// ClientDecrypter decrypt client token
 func ClientDecrypter(key, clientID, clientSecret string) (name, id string, err error) {
 	secret, _ := hex.DecodeString(clientSecret)
 	cid, _ := hex.DecodeString(clientID)

@@ -10,23 +10,28 @@ import (
 
 const cookie_name = "mercuriusAuth"
 
+// Oauth
 type Oauth struct {
 	Id     string `json:"id"`
 	Secret string `json:"secret"`
 }
 
+// Claims
 type Claims struct {
 	Ip string `json:"ip"`
 	jwt.StandardClaims
 }
 
+// App
 type App struct {
 	Name string `json:"name"`
 	Id   string `json:"id"`
 }
 
+// DB
 var DB map[Oauth]*App = make(map[Oauth]*App)
 
+// LoginRequired
 func LoginRequired(ctx *context.Context) {
 	cookie, err := ctx.Req.Cookie(cookie_name)
 	if err != nil {
@@ -45,6 +50,7 @@ func LoginRequired(ctx *context.Context) {
 	}
 }
 
+// LoginRequiredApi
 func LoginRequiredApi(ctx *context.Context) {
 	header := ctx.Req.Header.Get("Authorization")
 	if header != "" {

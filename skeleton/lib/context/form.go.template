@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Form representation
 type Form interface {
 	binding.Validator
 }
@@ -50,10 +51,12 @@ func getRuleBody(field reflect.StructField, prefix string) string {
 	return ""
 }
 
+// GetSize get size validation
 func GetSize(field reflect.StructField) string {
 	return getRuleBody(field, "Size(")
 }
 
+// Validate form
 func Validate(errs binding.Errors, data map[string]interface{}, f Form, l macaron.Locale) binding.Errors {
 	if errs.Len() == 0 {
 		return errs

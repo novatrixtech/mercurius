@@ -15,6 +15,7 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
+// SetupMiddlewares
 func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
@@ -45,6 +46,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(context.Contexter())
 }
 
+// SetupRoutes
 func SetupRoutes(app *macaron.Macaron) {
 	app.Get("", func() string {
 		return "Mercurius Works!"
