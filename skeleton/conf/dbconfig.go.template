@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
+	// import mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	// import postgre driver
 	_ "github.com/lib/pq"
 )
 
