@@ -9,3 +9,5 @@ max_conn = {{.MaxConn}}
 idle_conn = {{.IdleConn}}
 cache_adapter = {{.CacheType}}
 cache_adapter_config = {{.CacheCfgs}}
+http_port = {{.HttpPort}}
+force_local_http_port = false

@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/novatrixtech/mercurius/examples/simple/conf"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
-	"net/http"
 )
 
 func LoginPage(ctx *context.Context) {
@@ -32,7 +33,7 @@ func Oauth(ctx *context.Context) {
 		Id:     id,
 		Secret: secret,
 	}
-	appName, appID := auth.ClientDecrypter(key, id, secret)
+	appName, appID, _ := auth.ClientDecrypter(key, id, secret)
 	data := auth.DB[credentials]
 	if data.Id == appID && data.Name == appName {
 		token := auth.GenerateJWTToken(data, ctx)

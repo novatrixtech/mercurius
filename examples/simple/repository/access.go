@@ -2,20 +2,22 @@ package repository
 
 import (
 	"fmt"
-	"github.com/go-macaron/cache"
-	"github.com/jmoiron/sqlx"
-	"github.com/novatrixtech/mercurius/examples/simple/conf"
-	"github.com/novatrixtech/mercurius/examples/simple/model"
 	"strconv"
 	"time"
+
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+
+	"github.com/go-macaron/cache"
+	"github.com/jmoiron/sqlx"
+	"github.com/novatrixtech/mercurius/examples/simple/model"
 )
 
 type AccessRepository struct {
 	db *sqlx.DB
 }
 
-func NewAccessRepository(cfg conf.Database) (*AccessRepository, error) {
-	db, err := cfg.DB()
+func NewAccessRepository() (*AccessRepository, error) {
+	db, err := conf.GetDB()
 	if err != nil {
 		return nil, err
 	}
