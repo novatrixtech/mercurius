@@ -3,13 +3,14 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"go/build"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 // newCmd represents the new command
@@ -185,7 +186,7 @@ func confValues() map[string]interface{} {
 	cache := terminal("What cache do you want to use?", "memory")
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
-	cfgs["Key"] = terminal("What is your oauth key (key size must be 16 or 32)?", "")
+	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
 	return cfgs
 }
