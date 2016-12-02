@@ -55,24 +55,26 @@ func LoginRequired(ctx *context.Context) {
 
 // LoginRequiredApi
 func LoginRequiredApi(ctx *context.Context) {
-	header := ctx.Req.Header.Get("Authorization")
-	if header != "" {
-		value := strings.Split(header, " ")[1]
+    header := ctx.Req.Header.Get("Authorization")
+    if header != "" {
+        splitted := strings.Split(header, " ")
+		if len(splitted) < 2 {
+			ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Malformed request header"})
+			return
+		}
+		value := splitted[1]
 		token, err := jwt.ParseWithClaims(value, &Claims{}, parse)
-		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
-			log.Println(err)
-			return
-		}
-		if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.Ip {
-			ctx.Data["jwt"] = *claims
-			return
-		} else {
-			ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
-			log.Println("Cause: invalid token")
-			return
-		}
-	}
-	ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
-	log.Println("Cause: Empty header")
+        if err != nil {
+            ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+            return
+        }
+        if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.Ip {
+            ctx.Data["jwt"] = *claims
+            return
+        } else {
+            ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+            return
+        }
+    }
+    ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 }
