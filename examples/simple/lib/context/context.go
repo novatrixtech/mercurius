@@ -1,14 +1,15 @@
 package context
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/go-macaron/cache"
 	"github.com/go-macaron/jade"
 	"github.com/go-macaron/session"
 	"github.com/go-macaron/toolbox"
 	"gopkg.in/macaron.v1"
-	"net/http"
-	"encoding/json"
-	"log"
 )
 
 var ctx *Context
@@ -73,13 +74,14 @@ func (ctx *Context) NativeHTML(status int, name string) {
 }
 
 func (ctx *Context) JSONWithoutEscape(status int, obj interface{}) {
+	ctx.Header().Set("Content-Type", "application/json")
 	ret, err := json.Marshal(&obj)
 	if err != nil {
 		log.Print("[JSONWithoutEscape]" + err.Error())
 		http.Error(ctx.Resp, "{'errors':'JSON Marshaling Error = "+err.Error()+"'}", 500)
 		return
 	}
-
+	ctx.Status(status)
 	log.Println("[JSONWithoutEscape] Returned object: " + string(ret))
 	ctx.Resp.Write(ret)
 }
