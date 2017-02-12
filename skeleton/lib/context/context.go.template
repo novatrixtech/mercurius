@@ -99,3 +99,10 @@ func I18n(key string) string {
 
 }
 
+/*
+GetContext Get system context
+*/
+func GetContext() *Context {
+    return ctx
+}
+
