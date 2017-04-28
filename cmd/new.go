@@ -27,11 +27,15 @@ var newCmd = &cobra.Command{
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
+		vendorize()
 		packageStateCheck()
 	},
 }
 
-const mercuriusPath = "github.com/novatrixtech/mercurius"
+const (
+	mercuriusPath = "github.com/novatrixtech/mercurius"
+	godepPath     = "github.com/tools/godep"
+)
 
 var (
 	// go related paths
@@ -192,12 +196,11 @@ func confValues() map[string]interface{} {
 }
 
 func packageStateCheck() {
-	pkg, err := build.Import(importPath, "", build.FindOnly)
-	if err != nil {
-		fmt.Printf("Abort: Could not find generated app: %s\n", err)
-		os.Exit(-1)
-	}
-	cmd := exec.Command("go", "build", pkg.ImportPath)
+	pkg := getGeneratedCode()
+
+	cd(pkg.Dir)
+
+	cmd := exec.Command("go", "build")
 	out, _ := cmd.CombinedOutput()
 	msg := string(out)
 	fmt.Println(msg)
@@ -214,6 +217,59 @@ func packageStateCheck() {
 		}
 	}
 
+}
+
+func getGeneratedCode() *build.Package {
+	pkg, err := build.Import(importPath, "", build.FindOnly)
+	if err != nil {
+		fmt.Printf("Abort: Could not find generated app: %s\n", err)
+		os.Exit(-1)
+	}
+	return pkg
+}
+
+func getGodep() {
+	_, err := build.Import(godepPath, "", build.FindOnly)
+	if err != nil {
+		cmd := exec.Command("go", "get", godepPath)
+		err = cmd.Run()
+		if err != nil {
+			fmt.Printf("Abort: %s\n", err)
+			os.Exit(-1)
+		}
+	}
+}
+
+func getDependencides() {
+	cmd := exec.Command("go", "get", "./...")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Printf("Abort: %s\n", err)
+		os.Exit(-1)
+	}
+}
+
+func vendorize() {
+	getDependencides()
+	getGodep()
+	pkg := getGeneratedCode()
+
+	cd(pkg.Dir)
+
+	cmd := exec.Command("godep", "save")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Printf("Abort: %s\n", err)
+		os.Exit(-1)
+	}
+}
+
+func cd(dir string) {
+	err := os.Chdir(dir)
+	if err != nil {
+		fmt.Printf("Abort: %s\n", err)
+		os.Exit(-1)
+	}
 }
 
 func init() {
