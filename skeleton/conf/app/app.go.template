@@ -12,6 +12,7 @@ import (
 	"{{.AppPath}}/lib/cache"
 	"{{.AppPath}}/lib/context"
 	"{{.AppPath}}/lib/template"
+	"{{.AppPath}}/lib/cors"
 	"gopkg.in/macaron.v1"
 )
 
@@ -20,6 +21,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
 	app.Use(gzip.Gziper())
+	app.Use(cors.Cors())
 	app.Use(toolbox.Toolboxer(app, toolbox.Options{
 		HealthCheckers: []toolbox.HealthChecker{
 			new(handler.AppChecker),

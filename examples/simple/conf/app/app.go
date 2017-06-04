@@ -13,6 +13,7 @@ import (
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/cache"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/cors"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/template"
 	"gopkg.in/macaron.v1"
 )
@@ -21,6 +22,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
 	app.Use(gzip.Gziper())
+	app.Use(cors.Cors())
 	app.Use(toolbox.Toolboxer(app, toolbox.Options{
 		HealthCheckers: []toolbox.HealthChecker{
 			new(handler.AppChecker),
