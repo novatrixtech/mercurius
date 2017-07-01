@@ -21,8 +21,7 @@ import (
 func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
-	app.Use(gzip.Gziper())
-	app.Use(cors.Cors())
+	app.Use(gzip.Gziper())	
 	app.Use(toolbox.Toolboxer(app, toolbox.Options{
 		HealthCheckers: []toolbox.HealthChecker{
 			new(handler.AppChecker),
@@ -47,6 +46,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	))
 	app.Use(session.Sessioner())
 	app.Use(context.Contexter())
+	app.Use(cors.Cors())
 }
 
 func SetupRoutes(app *macaron.Macaron) {
