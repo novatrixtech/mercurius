@@ -250,18 +250,23 @@ func getDependencides() {
 }
 
 func vendorize() {
-	getDependencides()
-	getGodep()
-	pkg := getGeneratedCode()
+	v := terminal("Do you want vendorize your app using Godep?", "y")
+	if v == "y" {
+		getDependencides()
+		getGodep()
+		pkg := getGeneratedCode()
 
-	cd(pkg.Dir)
+		cd(pkg.Dir)
 
-	cmd := exec.Command("godep", "save")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Printf("Abort: %s\n", err)
-		os.Exit(-1)
+		cmd := exec.Command("godep", "save")
+		err := cmd.Run()
+		if err != nil {
+			fmt.Printf("Abort: %s\n", err)
+			os.Exit(-1)
+		}
+		return
 	}
+	fmt.Println("vendorization skipped")
 }
 
 func cd(dir string) {
