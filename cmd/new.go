@@ -240,7 +240,7 @@ func getGodep() {
 	}
 }
 
-func getDependencides() {
+func getDependencies() {
 	cmd := exec.Command("go", "get", "./...")
 	err := cmd.Run()
 	if err != nil {
@@ -252,7 +252,8 @@ func getDependencides() {
 func vendorize() {
 	v := terminal("Do you want vendorize your app using Godep?", "y")
 	if v == "y" {
-		getDependencides()
+		fmt.Println("vendorizing...")
+		getDependencies()
 		getGodep()
 		pkg := getGeneratedCode()
 
