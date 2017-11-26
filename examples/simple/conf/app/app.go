@@ -74,5 +74,30 @@ func SetupRoutes(app *macaron.Macaron) {
 		app.Post("/oauth/token", handler.Oauth)
 		app.Get("/list", auth.LoginRequiredApi, handler.ListAccessForApi)
 	})
+	/*
+		//An example to test DB connection
+		app.Get("", func() string {
+			db, err := conf.GetDB()
+			if err != nil {
+				return err.Error()
+			}
+			err = db.Ping()
+			if err != nil {
+				return err.Error()
+			}
+			col, err := conf.GetMongoCollection("teste")
+			if err != nil {
+				return err.Error()
+			}
+			defer col.Database.Session.Close()
+			teste := Teste{Status: "OK"}
+			err = col.Insert(teste)
+			return "Mercurius Works!"
+		})
 
+		//Include this struct after import session
+		type Teste struct {
+			Status string
+		}
+	*/
 }
