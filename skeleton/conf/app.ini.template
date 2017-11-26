@@ -11,3 +11,5 @@ cache_adapter = {{.CacheType}}
 cache_adapter_config = {{.CacheCfgs}}
 http_port = {{.HttpPort}}
 force_local_http_port = false
+mongo_uri = {{.MongoURI}}
+mongo_db = {{.MongoDBName}}

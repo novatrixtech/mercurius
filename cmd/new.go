@@ -16,8 +16,8 @@ import (
 // newCmd represents the new command
 var newCmd = &cobra.Command{
 	Use:   "new",
-	Short: "Create a new mercurius project",
-	Long:  `Create a new mercurius project`,
+	Short: "Create a new web project",
+	Long:  `Create a new Golang web project based on Mercurius boilerplate`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
 		if len(args) > 0 {
@@ -27,8 +27,9 @@ var newCmd = &cobra.Command{
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
-		vendorize()
 		packageStateCheck()
+		vendorize()
+		fmt.Println("Congratulations. Your Application is ready at: ", appPath)
 	},
 }
 
@@ -97,8 +98,8 @@ func initGoPaths() {
 func setApplicationPath() {
 	var err error
 	appName = terminal("What is your application name?", "")
-	gitPath := terminal("What is your git or mercurial host?", "github.com")
-	gitUser := terminal("What is your git or mercurial username?", "")
+	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
+	gitUser := terminal("What is your git source host's username?", "")
 
 	//check if gitUser is not empty to put gitUser between slashes
 	if gitUser != "" {
@@ -179,7 +180,7 @@ func confValues() map[string]interface{} {
 	cfgs := make(map[string]interface{})
 	cfgs["AppPath"] = importPath
 	cfgs["AppName"] = appName
-	cfgs["DBType"] = terminal("What database do you want to use?", "mysql")
+	cfgs["DBType"] = strings.ToLower(terminal("What SQL Database do you want to use? MySQL or Postgres?", "mysql"))
 	cfgs["DBUser"] = terminal("What is your database user?", "root")
 	cfgs["DBPw"] = terminal("What is your database password?", "")
 	cfgs["DBName"] = terminal("What is your database name?", "")
@@ -187,11 +188,17 @@ func confValues() map[string]interface{} {
 	cfgs["DBPort"] = terminal("What is your database port?", "3306")
 	cfgs["MaxConn"] = terminal("What is your database max connection pool?", "10")
 	cfgs["IdleConn"] = terminal("What is your database idle connection pool?", "10")
-	cache := terminal("What cache do you want to use?", "memory")
+	cache := strings.ToLower(terminal("What cache do you want to use? Memory, File, Redis or Memcache?", "memory"))
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
+	if cache != "memory" {
+		fmt.Println("Don't forget to adjust cache config settings at app.go after the App being built.")
+		fmt.Println(" ")
+	}
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
+	cfgs["MongoURI"] = terminal("What is your MongoDB URI?", "mongodb://localhost:27017/myMongoDb")
+	cfgs["MongoDBName"] = terminal("What is your MongoDB database name?", "myMongoDb")
 	return cfgs
 }
 
@@ -208,7 +215,7 @@ func packageStateCheck() {
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("rd", "/s", "/q", pkg.Dir)
 		} else {
-			cmd = exec.Command("rm", "-rf", pkg.Dir)
+			cmd = exec.Command("rm", "-Rf", pkg.Dir)
 		}
 		err := cmd.Run()
 		if err != nil {
@@ -250,16 +257,18 @@ func getDependencies() {
 }
 
 func vendorize() {
-	v := terminal("Do you want vendorize your app using Godep?", "y")
+	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
-		fmt.Println("vendorizing...")
-		getDependencies()
-		getGodep()
+		fmt.Println("Vendorizing...")
+		//getDependencies()
+		//getGodep()
 		pkg := getGeneratedCode()
 
 		cd(pkg.Dir)
 
+		fmt.Println("Executing godep...")
 		cmd := exec.Command("godep", "save")
+		fmt.Println("Godep executed...")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Printf("Abort: %s\n", err)
