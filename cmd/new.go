@@ -27,8 +27,8 @@ var newCmd = &cobra.Command{
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
-		vendorize()
 		packageStateCheck()
+		vendorize()
 	},
 }
 
@@ -252,11 +252,11 @@ func getDependencies() {
 }
 
 func vendorize() {
-	v := terminal("Do you want vendorize your app using Godep?", "y")
+	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
 		fmt.Println("vendorizing...")
-		getDependencies()
-		getGodep()
+		//getDependencies()
+		//getGodep()
 		pkg := getGeneratedCode()
 
 		cd(pkg.Dir)
