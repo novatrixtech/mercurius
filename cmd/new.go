@@ -179,7 +179,7 @@ func confValues() map[string]interface{} {
 	cfgs := make(map[string]interface{})
 	cfgs["AppPath"] = importPath
 	cfgs["AppName"] = appName
-	cfgs["DBType"] = terminal("What database do you want to use?", "mysql")
+	cfgs["DBType"] = terminal("What SQL Database do you want to use? MySQL or PostgreSQL?", "mysql")
 	cfgs["DBUser"] = terminal("What is your database user?", "root")
 	cfgs["DBPw"] = terminal("What is your database password?", "")
 	cfgs["DBName"] = terminal("What is your database name?", "")
@@ -187,7 +187,7 @@ func confValues() map[string]interface{} {
 	cfgs["DBPort"] = terminal("What is your database port?", "3306")
 	cfgs["MaxConn"] = terminal("What is your database max connection pool?", "10")
 	cfgs["IdleConn"] = terminal("What is your database idle connection pool?", "10")
-	cache := terminal("What cache do you want to use?", "memory")
+	cache := terminal("What cache do you want to use? Memory, File, Redis or Memcache?", "memory")
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
