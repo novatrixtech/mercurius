@@ -12,6 +12,8 @@ Get a web application template for Golang that includes: Internationalization, R
 
 ```go install github.com/novatrixtech/mercurius```
 
+```cd $GOPATH``` or for Windows users ```cd %GOPATH%``` Mercurius must be called from developer's GOPATH dir
+
 ```mercurius new```
 
 # Structure of a Project
