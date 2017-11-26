@@ -79,7 +79,7 @@ DSN - Gets database connection string
 func DSN() string {
 	if DBConnData.DBType == "mysql" {
 		return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", DBConnData.User, DBConnData.Pw, DBConnData.Host, DBConnData.Port, DBConnData.DBName)
-	} else if DBConnData.DBType == "postgresql" {
+	} else if DBConnData.DBType == "postgres" {
 		return fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable", DBConnData.User, DBConnData.Pw, DBConnData.Host, DBConnData.Port, DBConnData.DBName)
 	} else {
 		return ""
