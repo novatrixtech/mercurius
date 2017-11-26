@@ -16,8 +16,8 @@ import (
 // newCmd represents the new command
 var newCmd = &cobra.Command{
 	Use:   "new",
-	Short: "Create a new mercurius project",
-	Long:  `Create a new mercurius project`,
+	Short: "Create a new web project",
+	Long:  `Create a new Golang web project based on Mercurius boilerplate`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
 		if len(args) > 0 {
@@ -97,8 +97,8 @@ func initGoPaths() {
 func setApplicationPath() {
 	var err error
 	appName = terminal("What is your application name?", "")
-	gitPath := terminal("What is your git or mercurial host?", "github.com")
-	gitUser := terminal("What is your git or mercurial username?", "")
+	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
+	gitUser := terminal("What is your git source host's username?", "")
 
 	//check if gitUser is not empty to put gitUser between slashes
 	if gitUser != "" {
@@ -192,6 +192,8 @@ func confValues() map[string]interface{} {
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
+	cfgs["MongoURI"] = terminal("What is your MongoDB URI?", "mongodb://localhost:27017/myMongoDb")
+	cfgs["MongoDBName"] = terminal("What is your MongoDB database name?", "myMongoDb")
 	return cfgs
 }
 
@@ -208,7 +210,7 @@ func packageStateCheck() {
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("rd", "/s", "/q", pkg.Dir)
 		} else {
-			cmd = exec.Command("rm", "-rf", pkg.Dir)
+			cmd = exec.Command("rm", "-Rf", pkg.Dir)
 		}
 		err := cmd.Run()
 		if err != nil {
@@ -259,7 +261,9 @@ func vendorize() {
 
 		cd(pkg.Dir)
 
+		fmt.Println("executing godep...")
 		cmd := exec.Command("godep", "save")
+		fmt.Println("godep executed...")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Printf("Abort: %s\n", err)
