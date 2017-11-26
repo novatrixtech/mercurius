@@ -29,6 +29,7 @@ var newCmd = &cobra.Command{
 		copyNewAppFiles(confValues())
 		packageStateCheck()
 		vendorize()
+		fmt.Println("Congratulations. Your Application is ready at: ", appPath, appName)
 	},
 }
 
@@ -190,6 +191,9 @@ func confValues() map[string]interface{} {
 	cache := terminal("What cache do you want to use? Memory, File, Redis or Memcache?", "memory")
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
+	if strings.ToLower(cache) != "memory" {
+		fmt.Println("Don't forget to adjust cache config settings at app.go after the App being built.")
+	}
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
 	cfgs["MongoURI"] = terminal("What is your MongoDB URI?", "mongodb://localhost:27017/myMongoDb")
@@ -254,16 +258,16 @@ func getDependencies() {
 func vendorize() {
 	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
-		fmt.Println("vendorizing...")
+		fmt.Println("Vendorizing...")
 		//getDependencies()
 		//getGodep()
 		pkg := getGeneratedCode()
 
 		cd(pkg.Dir)
 
-		fmt.Println("executing godep...")
+		fmt.Println("Executing godep...")
 		cmd := exec.Command("godep", "save")
-		fmt.Println("godep executed...")
+		fmt.Println("Godep executed...")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Printf("Abort: %s\n", err)

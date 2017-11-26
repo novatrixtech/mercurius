@@ -18,10 +18,11 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
+//SetupMiddlewares configures the middlewares using in each web request
 func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(macaron.Logger())
 	app.Use(macaron.Recovery())
-	app.Use(gzip.Gziper())	
+	app.Use(gzip.Gziper())
 	app.Use(toolbox.Toolboxer(app, toolbox.Options{
 		HealthCheckers: []toolbox.HealthChecker{
 			new(handler.AppChecker),
@@ -41,14 +42,26 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		Directory: "public/templates",
 		Funcs:     template.FuncMaps(),
 	}))
+	//cache in memory
 	app.Use(mcache.Cacher(
 		cache.Option(conf.Cfg.Section("").Key("cache_adapter").Value()),
 	))
+	/*
+		Redis Cache
+		Add this lib to import session: _ "github.com/go-macaron/cache/redis"
+		Later replaces the cache in memory instructions for the lines below:
+		optCache := mcache.Options{
+				Adapter:       conf.Cfg.Section("").Key("cache_adapter").Value(),
+				AdapterConfig: conf.Cfg.Section("").Key("cache_adapter_config").Value(),
+			}
+		app.Use(mcache.Cacher(optCache))
+	*/
 	app.Use(session.Sessioner())
 	app.Use(context.Contexter())
 	app.Use(cors.Cors())
 }
 
+//SetupRoutes defines the routes the Web Application will respond
 func SetupRoutes(app *macaron.Macaron) {
 	app.Group("", func() {
 		app.Get("/", handler.ListAccessPage)
