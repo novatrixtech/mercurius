@@ -128,3 +128,7 @@ func User(ctx *context.Context) {
         ctx.NativeHTML(http.StatusOk, "edit")
 }
 ```
+
+- **To deploy only the compiled file**
+
+Besides compiled file you need to copy locale, conf and public directories along with it in order to a Mercurius project works properly.

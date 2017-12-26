@@ -8,7 +8,6 @@ import (
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/query"
 	"github.com/novatrixtech/mercurius/examples/simple/model"
-	"github.com/novatrixtech/mercurius/examples/simple/repository"
 )
 
 func ListAccessPage(ctx *context.Context) {
@@ -64,10 +63,6 @@ func list(ctx *context.Context) ([]model.Access, error) {
 
 	}
 
-	repo, err := repository.NewAccessRepository()
-	if err != nil {
-		return nil, err
-	}
 	access, err := repo.FindAllBy(query.Build(fields), ctx.Cache)
 	if err != nil {
 		return nil, err

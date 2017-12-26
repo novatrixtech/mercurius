@@ -23,7 +23,7 @@ Structure of a Project
  Middlewares and routes configuration
 
  /handler
- HTTP handlers
+ HTTP handlers (controllers)
 
  /locale
  Language specific content bundles
@@ -38,9 +38,9 @@ Structure of a Project
  Web resources that are publicly available
 
  /public/templates
- Jade templates
+ Jade & Go HTML templates
 
- /repository
+ /repo
  Database comunication following repository pattern
 
  main.go
