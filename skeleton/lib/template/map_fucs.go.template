@@ -3,13 +3,13 @@ package template
 import (
 	"html/template"
 
-	"{{.AppPath}}/lib/context"
+	"{{.AppPath}}/lib/contx"
 )
 
 // FuncMaps to view
 func FuncMaps() []template.FuncMap {
 	return []template.FuncMap{
 		map[string]interface{}{
-			"Tr": context.I18n,
+			"Tr": contx.I18n,
 		}}
 }
