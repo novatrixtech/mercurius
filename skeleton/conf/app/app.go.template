@@ -14,6 +14,7 @@ import (
 	"{{.AppPath}}/lib/template"
 	"{{.AppPath}}/lib/cors"
 	"gopkg.in/macaron.v1"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 //SetupMiddlewares configures the middlewares using in each web request
@@ -67,6 +68,9 @@ func SetupRoutes(app *macaron.Macaron) {
 
 	//HealthChecker
 	app.Get("/health", handler.HealthCheck)
+
+	//Prometheus metrics
+	app.Get("/metrics", prometheus.Handler())
 	
 	/*
 		//An example to test DB connection
