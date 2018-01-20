@@ -5,15 +5,16 @@ import (
 	"crypto/cipher"
 	"encoding/hex"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/novatrixtech/mercurius/examples/simple/conf"
-	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/novatrixtech/mercurius/examples/simple/conf"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 )
 
-func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
+func CreateJWTCookie(jwtID string, issuer string, ctx *contx.Context) {
 	ip := ctx.RemoteAddr()
 	expireCookie := time.Now().Add(time.Hour * 1)
 	signedToken := generateJWTToken(jwtID, ip, issuer)
@@ -22,12 +23,12 @@ func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
 
 }
 
-func GenerateJWTToken(app *App, ctx *context.Context) string {
+func GenerateJWTToken(app *App, ctx *contx.Context) string {
 	ip := ctx.RemoteAddr()
 	return generateJWTToken(app.Id, ip, app.Name)
 }
 
-func InvalidateJWTToken(ctx *context.Context) {
+func InvalidateJWTToken(ctx *contx.Context) {
 	deleteCookie := http.Cookie{Name: cookie_name, Value: "none", Expires: time.Now()}
 	http.SetCookie(ctx.Resp, &deleteCookie)
 }

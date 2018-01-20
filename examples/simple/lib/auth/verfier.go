@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 )
 
 const cookie_name = "mercuriusAuth"
@@ -27,7 +27,7 @@ type App struct {
 
 var DB map[Oauth]*App = make(map[Oauth]*App)
 
-func LoginRequired(ctx *context.Context) {
+func LoginRequired(ctx *contx.Context) {
 	cookie, err := ctx.Req.Cookie(cookie_name)
 	if err != nil {
 		ctx.Redirect("/login")
@@ -45,7 +45,7 @@ func LoginRequired(ctx *context.Context) {
 	}
 }
 
-func LoginRequiredApi(ctx *context.Context) {
+func LoginRequiredApi(ctx *contx.Context) {
 	header := ctx.Req.Header.Get("Authorization")
 	if header != "" {
 		value := strings.Split(header, " ")[1]

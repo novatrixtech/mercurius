@@ -5,14 +5,14 @@ import (
 
 	"github.com/novatrixtech/mercurius/examples/simple/conf"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
-	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 )
 
-func LoginPage(ctx *context.Context) {
+func LoginPage(ctx *contx.Context) {
 	ctx.HTML(http.StatusOK, "login")
 }
 
-func BasicAuth(ctx *context.Context, form context.Login) {
+func BasicAuth(ctx *contx.Context, form contx.Login) {
 	if ctx.HasError() {
 		ctx.HTML(http.StatusOK, "login")
 		return
@@ -26,7 +26,7 @@ func BasicAuth(ctx *context.Context, form context.Login) {
 	}
 }
 
-func Oauth(ctx *context.Context) {
+func Oauth(ctx *contx.Context) {
 	key := conf.Cfg.Section("").Key("oauth_key").Value()
 	id, secret, _ := ctx.Req.BasicAuth()
 	credentials := auth.Oauth{
@@ -45,7 +45,7 @@ func Oauth(ctx *context.Context) {
 
 }
 
-func Logout(ctx *context.Context) {
+func Logout(ctx *contx.Context) {
 	auth.InvalidateJWTToken(ctx)
 	ctx.Redirect("/login")
 }

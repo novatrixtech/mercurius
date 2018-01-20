@@ -5,18 +5,18 @@ import (
 
 	"log"
 
-	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/query"
 	"github.com/novatrixtech/mercurius/examples/simple/model"
 	"github.com/novatrixtech/mercurius/examples/simple/repo"
 )
 
-func ListAccessPage(ctx *context.Context) {
+func ListAccessPage(ctx *contx.Context) {
 	ctx.Data["rows"] = 0
 	ctx.HTML(http.StatusOK, "list")
 }
 
-func ListAccessBy(ctx *context.Context) {
+func ListAccessBy(ctx *contx.Context) {
 	access, err := list(ctx)
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
@@ -28,7 +28,7 @@ func ListAccessBy(ctx *context.Context) {
 	ctx.HTML(http.StatusOK, "list")
 }
 
-func ListAccessForApi(ctx *context.Context) {
+func ListAccessForApi(ctx *contx.Context) {
 	access, err := list(ctx)
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
@@ -38,7 +38,7 @@ func ListAccessForApi(ctx *context.Context) {
 	ctx.JSON(http.StatusOK, access)
 }
 
-func list(ctx *context.Context) ([]model.Access, error) {
+func list(ctx *contx.Context) ([]model.Access, error) {
 	fields := make(map[string]string)
 	if marca := ctx.Query("marca"); marca != "" {
 		fields["marca"] = marca
@@ -64,7 +64,11 @@ func list(ctx *context.Context) ([]model.Access, error) {
 
 	}
 
-	access, err := repo.FindAllBy(query.Build(fields), ctx.Cache)
+	objRepo, err := repo.NewAccessRepository()
+	if err != nil {
+		return nil, err
+	}
+	access, err := objRepo.FindAllBy(query.Build(fields), ctx.Cache)
 	if err != nil {
 		return nil, err
 	}
