@@ -1,4 +1,4 @@
-# mercurius
+# Mercurius
 [![GoDoc](https://godoc.org/github.com/novatrixtech/mercurius?status.svg)](https://godoc.org/github.com/novatrixtech/mercurius)
 [![license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -15,7 +15,7 @@ Get a web application template for Golang that includes: Internationalization, R
 ```cd $GOPATH``` or for Windows users ```cd %GOPATH%``` 
 
 ```mercurius new```
-IMPORTANT: Mercurius must be called from developer's GOPATH dir
+IMPORTANT: Mercurius must be called from developer's GOPATH/src dir
 
 # Structure of a Project
 ```
