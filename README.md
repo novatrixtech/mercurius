@@ -82,10 +82,10 @@ func Hello() string {
 ```go
 import (
         "net/http"
-        "{{.AppPath}}/lib/context"
+        "{{.AppPath}}/lib/contx"
 )
 
-func User(ctx *context.Context) {
+func User(ctx *contx.Context) {
 	//user is the struct you want to return
         ctx.JSON(http.StatusOk, user)
 }
@@ -95,10 +95,10 @@ func User(ctx *context.Context) {
 ```go
 import (
         "net/http"
-        "{{.AppPath}}/lib/context"
+        "{{.AppPath}}/lib/contx"
 )
 
-func User(ctx *context.Context) {
+func User(ctx *contx.Context) {
 	//user is the struct you want to return
         ctx.XML(http.StatusOk, user)
 }
@@ -110,10 +110,10 @@ The extension of the templates must be `.jade`. Put the jade files inside public
 ```go
 import (
         "net/http"
-        "{{.AppPath}}/lib/context"
+        "{{.AppPath}}/lib/contx"
 )
 
-func User(ctx *context.Context) {
+func User(ctx *contx.Context) {
 	//edit is the page name you want to render
         ctx.HTML(http.StatusOk, "edit")
 }
@@ -125,10 +125,10 @@ The extension of the templates must be `.tmpl or .html`. Put the Go template fil
 ```go
 import (
         "net/http"
-        "{{.AppPath}}/lib/context"
+        "{{.AppPath}}/lib/contx"
 )
 
-func User(ctx *context.Context) {
+func User(ctx *contx.Context) {
 	//edit is the page name you want to render
         ctx.NativeHTML(http.StatusOk, "edit")
 }

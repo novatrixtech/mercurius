@@ -10,7 +10,7 @@ import (
 	"{{.AppPath}}/conf"
 	"{{.AppPath}}/handler"
 	"{{.AppPath}}/lib/cache"
-	"{{.AppPath}}/lib/context"
+	"{{.AppPath}}/lib/contx"
 	"{{.AppPath}}/lib/template"
 	"{{.AppPath}}/lib/cors"
 	"gopkg.in/macaron.v1"
@@ -55,7 +55,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 	app.Use(mcache.Cacher(optCache))
 	*/
 	app.Use(session.Sessioner())
-	app.Use(context.Contexter())
+	app.Use(contx.Contexter())
 	app.Use(cors.Cors())
 }
 
@@ -64,6 +64,10 @@ func SetupRoutes(app *macaron.Macaron) {
 	app.Get("", func() string {
 		return "Mercurius Works!"
 	})
+
+	//HealthChecker
+	app.Get("/health", handler.HealthCheck)
+	
 	/*
 		//An example to test DB connection
 		app.Get("", func() string {

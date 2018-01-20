@@ -12,7 +12,7 @@ import (
 	"github.com/novatrixtech/mercurius/examples/simple/handler"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/auth"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/cache"
-	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
+	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/cors"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/template"
 	"gopkg.in/macaron.v1"
@@ -57,7 +57,7 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		app.Use(mcache.Cacher(optCache))
 	*/
 	app.Use(session.Sessioner())
-	app.Use(context.Contexter())
+	app.Use(contx.Contexter())
 	app.Use(cors.Cors())
 }
 
@@ -68,8 +68,10 @@ func SetupRoutes(app *macaron.Macaron) {
 		app.Get("/list", handler.ListAccessBy)
 		app.Get("/logout", handler.Logout)
 	}, auth.LoginRequired)
+	//HealthChecker
+	app.Get("/health", handler.HealthCheck)
 	app.Get("/login", handler.LoginPage)
-	app.Post("/login", binding.BindIgnErr(context.Login{}), handler.BasicAuth)
+	app.Post("/login", binding.BindIgnErr(contx.Login{}), handler.BasicAuth)
 	app.Group("/api/v1", func() {
 		app.Post("/oauth/token", handler.Oauth)
 		app.Get("/list", auth.LoginRequiredApi, handler.ListAccessForApi)

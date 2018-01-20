@@ -1,11 +1,12 @@
-package context
+package contx
 
 import (
+	"reflect"
+	"strings"
+
 	"github.com/felipeweb/gopher-utils"
 	"github.com/go-macaron/binding"
 	"gopkg.in/macaron.v1"
-	"reflect"
-	"strings"
 )
 
 type Form interface {
