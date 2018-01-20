@@ -8,6 +8,7 @@ import (
 	"github.com/novatrixtech/mercurius/examples/simple/lib/context"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/query"
 	"github.com/novatrixtech/mercurius/examples/simple/model"
+	"github.com/novatrixtech/mercurius/examples/simple/repo"
 )
 
 func ListAccessPage(ctx *context.Context) {
