@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"{{.AppPath}}/lib/context"
+	"{{.AppPath}}/lib/contx"
 )
 
 /*
@@ -28,7 +28,7 @@ func PutIntoCache(key string, value interface{}) {
 PutIntoCache puts a value at system's cache
 */
 func PutIntoCacheWithTimeout(key string, timeoutInSeconds int, value interface{}) error {
-	ctx := context.GetContext()
+	ctx := contx.GetContext()
 	cache := ctx.Cache
 
 	err := cache.Put(key, value, int64(timeoutInSeconds))
@@ -44,7 +44,7 @@ func PutIntoCacheWithTimeout(key string, timeoutInSeconds int, value interface{}
 RemoveFromCache removes an item from cache
 */
 func RemoveFromCache(key string) {
-	ctx := context.GetContext()
+	ctx := contx.GetContext()
 	cache := ctx.Cache
 	if cache.IsExist(key) {
 		cache.Delete(key)
@@ -55,7 +55,7 @@ func RemoveFromCache(key string) {
 GetValueFromCache gets a value from the system's cache
 */
 func GetValueFromCache(key string) interface{} {
-	ctx := context.GetContext()
+	ctx := contx.GetContext()
 	cache := ctx.Cache
 	if cache.IsExist(key) {
 		return cache.Get(key)
