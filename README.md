@@ -10,6 +10,10 @@ Get a web application template for Golang that includes: Internationalization, R
 
 ```go get -v github.com/novatrixtech/mercurius/...```
 
+or
+
+```go get -u github.com/novatrixtech/mercurius```
+
 ```go install github.com/novatrixtech/mercurius```
 
 ```cd $GOPATH``` or for Windows users ```cd %GOPATH%``` 
