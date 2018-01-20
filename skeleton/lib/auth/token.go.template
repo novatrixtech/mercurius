@@ -7,14 +7,14 @@ import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"{{.AppPath}}/conf"
-	"{{.AppPath}}/lib/context"
+	"{{.AppPath}}/lib/contx"
 	"net/http"
 	"strings"
 	"time"
 )
 
 // CreateJWTCookie create cookie with jwt token
-func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
+func CreateJWTCookie(jwtID string, issuer string, ctx *contx.Context) {
 	ip := ctx.RemoteAddr()
 	expireCookie := time.Now().Add(time.Hour * 1)
 	signedToken := generateJWTToken(jwtID, ip, issuer)
@@ -24,13 +24,13 @@ func CreateJWTCookie(jwtID string, issuer string, ctx *context.Context) {
 }
 
 // GenerateJWTToken generate jwt token
-func GenerateJWTToken(app *App, ctx *context.Context) string {
+func GenerateJWTToken(app *App, ctx *contx.Context) string {
 	ip := ctx.RemoteAddr()
 	return generateJWTToken(app.Id, ip, app.Name)
 }
 
 // InvalidateJWTToken invalidate jwt token
-func InvalidateJWTToken(ctx *context.Context) {
+func InvalidateJWTToken(ctx *contx.Context) {
 	deleteCookie := http.Cookie{Name: cookie_name, Value: "none", Expires: time.Now()}
 	http.SetCookie(ctx.Resp, &deleteCookie)
 }
