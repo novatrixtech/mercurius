@@ -130,6 +130,6 @@ func User(ctx *context.Context) {
 }
 ```
 
-#To deploy only the compiled file**
+## To deploy only the binary file
 
-Besides compiled file you need to copy locale, conf and public directories along with it in order to a Mercurius project works properly.
+Besides binary file you need to copy locale, conf and public directories along with it in order to a Mercurius project works properly.
