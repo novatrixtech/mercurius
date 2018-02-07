@@ -28,7 +28,8 @@ func GetMongoSession() (*mgo.Session, error) {
 	}
 
 	LoadMongoConfig()
-	mgoSession, erro := mgo.Dial(mongoDbURI)
+	var erro error
+	mgoSession, erro = mgo.Dial(mongoDbURI)
 	if erro != nil {
 		log.Printf("[GetMongoSession] Erro ao tentar abrir a sessao com o Mongo: [%s]\n", erro.Error())
 		return nil, erro
