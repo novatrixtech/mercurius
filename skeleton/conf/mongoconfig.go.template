@@ -2,7 +2,7 @@ package conf
 
 import (
 	"log"
-
+	"os"
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -14,8 +14,13 @@ var mongoDbName string
 LoadMongoConfig Init MongoDB Connection
 */
 func LoadMongoConfig() {
-	mongoDbURI = Cfg.Section("").Key("mongo_uri").Value()
-	mongoDbName = Cfg.Section("").Key("mongo_db").Value()		
+	if len(os.Getenv("mongo_uri")) < 1 {
+		mongoDbURI = Cfg.Section("").Key("mongo_uri").Value()
+		mongoDbName = Cfg.Section("").Key("mongo_db").Value()
+		return
+	}
+	mongoDbURI = os.Getenv("mongo_uri")
+	mongoDbName = os.Getenv("mongo_db")
 }
 
 /*
