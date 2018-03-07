@@ -2,11 +2,16 @@ package conf
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	// import MySQL driver
+	_ "github.com/go-sql-driver/mysql"
+	// import PostgreSQL driver
 	_ "github.com/lib/pq"
+	// import SQL Server driver
+	_ "github.com/denisenkom/go-mssqldb"
 )
 
 /*
@@ -81,21 +86,34 @@ func DSN() string {
 		return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", DBConnData.User, DBConnData.Pw, DBConnData.Host, DBConnData.Port, DBConnData.DBName)
 	} else if DBConnData.DBType == "postgres" {
 		return fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable", DBConnData.User, DBConnData.Pw, DBConnData.Host, DBConnData.Port, DBConnData.DBName)
-	} else {
-		return ""
+	} else if DBConnData.DBType == "mssql" {
+		return fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s", DBConnData.Host, DBConnData.User, DBConnData.Pw, DBConnData.Port, DBConnData.DBName)
 	}
+	return ""
 }
 
 /*
 LoadDbConfig - Loads specific database connection information
 */
-func LoadDbConfig() *DbConnInfo {
-	return &DbConnInfo{
-		DBType: Cfg.Section("").Key("db_type").Value(),
-		User:   Cfg.Section("").Key("db_user").Value(),
-		Pw:     Cfg.Section("").Key("db_pw").Value(),
-		DBName: Cfg.Section("").Key("db_name").Value(),
-		Host:   Cfg.Section("").Key("db_host").Value(),
-		Port:   Cfg.Section("").Key("db_port").Value(),
+func LoadDbConfig() (dbConnectionInfo *DbConnInfo) {
+	if len(os.Getenv("db_type")) < 1 {
+		dbConnectionInfo = &DbConnInfo{
+			DBType: Cfg.Section("").Key("db_type").Value(),
+			User:   Cfg.Section("").Key("db_user").Value(),
+			Pw:     Cfg.Section("").Key("db_pw").Value(),
+			DBName: Cfg.Section("").Key("db_name").Value(),
+			Host:   Cfg.Section("").Key("db_host").Value(),
+			Port:   Cfg.Section("").Key("db_port").Value(),
+		}
+	} else {
+		dbConnectionInfo = &DbConnInfo{
+			DBType: os.Getenv("db_type"),
+			User:   os.Getenv("db_user"),
+			Pw:     os.Getenv("db_pw"),
+			DBName: os.Getenv("db_name"),
+			Host:   os.Getenv("db_host"),
+			Port:   os.Getenv("db_port"),
+		}
 	}
+	return
 }
