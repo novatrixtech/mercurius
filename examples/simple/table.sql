@@ -39,3 +39,24 @@ CREATE TABLE `logac_accesstokenacessos` (
   `rol_id` INT NULL,
   `sys_id` INT NULL,
   PRIMARY KEY (`rsys_id`));
+
+  ALTER TABLE `logac_accesstokenacessos` 
+CHANGE COLUMN `logac_id` `logac_id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `rol_roles` 
+CHANGE COLUMN `rol_id` `rol_id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `logacr_logaccesstokenrequest` 
+CHANGE COLUMN `logacr_id` `logacr_id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `rsys_rolesystems` 
+CHANGE COLUMN `rsys_id` `rsys_id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `sys_systems` 
+CHANGE COLUMN `sys_id` `sys_id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+INSERT INTO `sys_systems` (`sys_name`, `sys_active`) VALUES ('TEST-SYSTEM', '1');
+
+INSERT INTO `rol_roles` (`rol_description`) VALUES ('MASTER');
+
+INSERT INTO `rsys_rolesystems` (`rol_id`, `sys_id`) VALUES ('1', '1');

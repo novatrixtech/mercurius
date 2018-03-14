@@ -91,7 +91,7 @@ func GetAccessToken(ctx *contx.Context) {
 //GetUserCredentials gets user's clientID and Secret
 func GetUserCredentials(ctx *contx.Context) {
 	var err error
-	rolesAllowed := []int{3, 12}
+	rolesAllowed := []int{1}
 	_, err = auth.ValidateAuthorizationHeader(ctx.Req.Header, "GetUserCredentials", rolesAllowed)
 	if err != nil {
 		log.Println("[GetUserCredentials] Erro na autorização do AC: " + err.Error())

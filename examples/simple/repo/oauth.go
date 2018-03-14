@@ -55,7 +55,7 @@ func GetUserRoleByContactID(contactID int) (role int, err error) {
 			where
 				a.rol_id = c.rol_id and
 				b.sys_id = c.sys_id and 
-				b.status = 1 and
+				b.sys_active = 1 and
 				b.sys_id = ?`
 	err = db.Get(&role, sql, contactID)
 	if err != nil {
