@@ -2,9 +2,9 @@
 [![GoDoc](https://godoc.org/github.com/novatrixtech/mercurius?status.svg)](https://godoc.org/github.com/novatrixtech/mercurius)
 [![license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Mercurius gives you speed to create new 'Go' web applications. It let you more focused on your business than in your backend.
+Mercurius gives you speed to create new Go (golang) web applications and/or microservices. It lets you to be more focused on your business than in your backend.
 <br/><br/>
-Get a web application template for Golang that includes: Internationalization, Routers, Logging, Cache, Database, Jade Template Render Engine, JWT, oAuth 2.0. Built on top of Macaron, all items are configured and ready to use.
+Get a Go (golang) web application and/or microservice template that includes: Internationalization, Routers, Logging, Cache, Database, Jade/Pug Template Render Engine, JWT, oAuth 2.0, Prometheus and Docker. Built on top of Macaron, all items are configured and ready to use.
 
 # Getting Started
 
@@ -19,7 +19,10 @@ or
 ```cd $GOPATH``` or for Windows users ```cd %GOPATH%``` 
 
 ```mercurius new```
-IMPORTANT: Mercurius must be called from developer's GOPATH/src dir
+
+### IMPORTANT: 
+
+Mercurius must be called from developer's GOPATH/src dir
 
 # Structure of a Project
 ```
@@ -137,3 +140,7 @@ func User(ctx *contx.Context) {
 ## To deploy only the binary file
 
 Besides binary file you need to copy locale, conf and public directories along with it in order to a Mercurius project works properly.
+
+## Get more details
+
+Check out our Sample Project at Example folder to get more information about a Mercurius implementation.
