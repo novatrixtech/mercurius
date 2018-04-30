@@ -103,11 +103,20 @@ func setApplicationPath() {
 
 	//check if gitUser is not empty to put gitUser between slashes
 	if gitUser != "" {
-		gitUser = fmt.Sprintf("/%s", gitUser)
+		if runtime.GOOS == "windows" {
+			gitUser = fmt.Sprintf("\\%s", gitUser)
+		} else {
+			gitUser = fmt.Sprintf("/%s", gitUser)
+		}
+
 	}
 
 	//build import path
-	importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
+	if runtime.GOOS == "windows" {
+		importPath = fmt.Sprintf("%s%s\\%s", gitPath, gitUser, appName)
+	} else {
+		importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
+	}
 
 	//check if import path is valid
 	if importPath == "" {
@@ -144,7 +153,12 @@ func setApplicationPath() {
 	} else {
 		// we need to append a '/' when the app is
 		// is a subdirectory such as $GOROOT/src/path/to/mercurius
-		basePath += "/"
+		if runtime.GOOS == "windows" {
+			basePath += "\\"
+		} else {
+			basePath += "/"
+		}
+
 	}
 	// set base project path
 	skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
