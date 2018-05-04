@@ -3,6 +3,7 @@ package auth
 import (
 	"net/http"
 	"strings"
+	"log"
 
 	"github.com/dgrijalva/jwt-go"
 	"{{.AppPath}}/lib/contx"
