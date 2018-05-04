@@ -118,8 +118,6 @@ func terminal(question, defaultValue string) string {
 	//trata ambiente linux e mac que só tem o \n
 	newtext = strings.Replace(newtext, "\n", "", -1)
 
-	//fmt.Printf("text: %q %q %q", novotext, "a", text)
-
 	if newtext == "" {
 		return defaultValue
 	}
