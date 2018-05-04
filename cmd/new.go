@@ -27,7 +27,13 @@ var newCmd = &cobra.Command{
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
+		if debug {
+			fmt.Println("2 - copyNewAppFiles -> OK!\n")
+		}
 		packageStateCheck()
+		if debug {
+			fmt.Println("3 - packageStateCheck -> OK!\n")
+		}
 		vendorize()
 		fmt.Println("Congratulations. Your Application is ready at: ", appPath)
 	},
@@ -36,6 +42,7 @@ var newCmd = &cobra.Command{
 const (
 	mercuriusPath = "github.com/novatrixtech/mercurius"
 	godepPath     = "github.com/tools/godep"
+	debug         = false
 )
 
 var (
@@ -103,20 +110,11 @@ func setApplicationPath() {
 
 	//check if gitUser is not empty to put gitUser between slashes
 	if gitUser != "" {
-		if runtime.GOOS == "windows" {
-			gitUser = fmt.Sprintf("\\%s", gitUser)
-		} else {
-			gitUser = fmt.Sprintf("/%s", gitUser)
-		}
-
+		gitUser = fmt.Sprintf("/%s", gitUser)
 	}
 
 	//build import path
-	if runtime.GOOS == "windows" {
-		importPath = fmt.Sprintf("%s%s\\%s", gitPath, gitUser, appName)
-	} else {
-		importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
-	}
+	importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
 
 	//check if import path is valid
 	if importPath == "" {
@@ -153,15 +151,23 @@ func setApplicationPath() {
 	} else {
 		// we need to append a '/' when the app is
 		// is a subdirectory such as $GOROOT/src/path/to/mercurius
-		if runtime.GOOS == "windows" {
-			basePath += "\\"
-		} else {
-			basePath += "/"
-		}
-
+		basePath += "/"
 	}
 	// set base project path
 	skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
+
+	if debug {
+		fmt.Println("1 - Your runtime is: ", runtime.GOOS)
+		if runtime.GOOS == "windows" {
+			fmt.Printf(" skeletonPath: %s \n", skeletonPath)
+			fmt.Printf(" appName: %s \n", appName)
+			fmt.Printf(" gitPath: %s \n", gitPath)
+			fmt.Printf(" gitUser: %s \n", gitUser)
+			fmt.Printf(" import-Path: %s \n", importPath)
+			fmt.Printf(" app-Path: %s \n", appPath)
+			fmt.Printf(" base-Path: %s \n\n", basePath)
+		}
+	}
 }
 
 func copyNewAppFiles(cfgs map[string]interface{}) {
@@ -219,12 +225,20 @@ func confValues() map[string]interface{} {
 func packageStateCheck() {
 	pkg := getGeneratedCode()
 
+	if debug {
+		fmt.Printf("pkg.Dir: %q\n", pkg.Dir)
+	}
 	cd(pkg.Dir)
+	getDependencies()
+	fmt.Println("Get dependencies finished. Let's build you application.")
 
 	cmd := exec.Command("go", "build")
+	fmt.Println("Building your application...")
 	out, _ := cmd.CombinedOutput()
 	msg := string(out)
-	fmt.Println(msg)
+	if debug {
+	fmt.Println("Msg is: %",msg)
+	}
 	if msg != "" {
 		if runtime.GOOS == "windows" {
 			cmd = exec.Command("rd", "/s", "/q", pkg.Dir)
@@ -241,6 +255,11 @@ func packageStateCheck() {
 }
 
 func getGeneratedCode() *build.Package {
+
+	if debug {
+		fmt.Printf("importPath: %q\n\n\n", importPath)
+	}
+
 	pkg, err := build.Import(importPath, "", build.FindOnly)
 	if err != nil {
 		fmt.Printf("Abort: Could not find generated app: %s\n", err)
@@ -263,9 +282,10 @@ func getGodep() {
 
 func getDependencies() {
 	cmd := exec.Command("go", "get", "./...")
+	fmt.Println("Getting all dependencies and waiting Go finishes the job...")
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Abort: %s\n", err)
+		fmt.Printf("Error getting dependencies. Process aborted: %q - err.Error: %q\n", err, err.Error)
 		os.Exit(-1)
 	}
 }

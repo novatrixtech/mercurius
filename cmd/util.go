@@ -106,10 +106,22 @@ func mustCopyDir(destDir, srcDir string, data map[string]interface{}) error {
 func terminal(question, defaultValue string) string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println(fmt.Sprintf("%s (%s):", question, defaultValue))
-	text, _ := reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
-	if text == "" {
+	text, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Printf("[Error]: %", err.Error)
+		os.Exit(-1)
+	}
+
+	//trata ambiente windows que tem o \r
+	newtext := strings.Replace(text, "\r", "", -1)
+	//trata ambiente linux e mac que só tem o \n
+	newtext = strings.Replace(novotext, "\n", "", -1)
+
+	//fmt.Printf("text: %q %q %q", novotext, "a", text)
+
+	if newtext == "" {
 		return defaultValue
 	}
-	return text
+	return newtext
 }
