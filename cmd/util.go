@@ -116,7 +116,7 @@ func terminal(question, defaultValue string) string {
 	//trata ambiente windows que tem o \r
 	newtext := strings.Replace(text, "\r", "", -1)
 	//trata ambiente linux e mac que só tem o \n
-	newtext = strings.Replace(novotext, "\n", "", -1)
+	newtext = strings.Replace(newtext, "\n", "", -1)
 
 	//fmt.Printf("text: %q %q %q", novotext, "a", text)
 
