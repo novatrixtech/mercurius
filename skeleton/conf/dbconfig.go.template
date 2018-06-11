@@ -62,17 +62,27 @@ func GetDB() (*sqlx.DB, error) {
 		if err != nil {
 			return nil, err
 		}
-		idle := Cfg.Section("").Key("idle_conn").Value()
-		numIdle, err := strconv.Atoi(idle)
-		if err != nil {
-			return nil, err
+		var numMax, numIdle int
+		if len(os.Getenv("db_type")) < 1 {
+			numIdle, err = strconv.Atoi(Cfg.Section("").Key("idle_conn").Value())
+			if err != nil {
+				return nil, err
+			}
+			numMax, err = strconv.Atoi(Cfg.Section("").Key("max_conn").Value())
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			numIdle, err = strconv.Atoi(os.Getenv("idle_conn"))
+			if err != nil {
+				return nil, err
+			}
+			numMax, err = strconv.Atoi(os.Getenv("max_conn"))
+			if err != nil {
+				return nil, err
+			}
 		}
 		DB.SetMaxIdleConns(numIdle)
-		max := Cfg.Section("").Key("max_conn").Value()
-		numMax, err := strconv.Atoi(max)
-		if err != nil {
-			return nil, err
-		}
 		DB.SetMaxOpenConns(numMax)
 	}
 	return DB, err
@@ -116,4 +126,12 @@ func LoadDbConfig() (dbConnectionInfo *DbConnInfo) {
 		}
 	}
 	return
+}
+
+//checks if db config data is coming from environment variables
+func isDbConnParamsInEnvVariables() bool {
+	if len(os.Getenv("db_type")) > 1 {
+		return true
+	}
+	return false
 }
