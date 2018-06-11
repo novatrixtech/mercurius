@@ -127,3 +127,10 @@ func LoadDbConfig() (dbConnectionInfo *DbConnInfo) {
 	}
 	return
 }
+
+func isDbConnParamsInEnvVariables() bool {
+	if len(os.Getenv("db_type")) > 1 {
+		return true
+	}
+	return false
+}
