@@ -1,15 +1,14 @@
 package auth
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"encoding/hex"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/novatrixtech/cryptonx"
 	"github.com/novatrixtech/mercurius/examples/simple/conf"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 )
@@ -53,26 +52,25 @@ func generateJWTToken(jwtID string, ip string, issuer string) string {
 	return signedToken
 }
 
+// ClientDecrypter decrypt client token
 func ClientDecrypter(key, clientID, clientSecret string) (name, id string, err error) {
-	secret, _ := hex.DecodeString(clientSecret)
-	cid, _ := hex.DecodeString(clientID)
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return "", "", err
-	}
-
-	aesgcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", "", err
-	}
-
-	text, err := aesgcm.Open(nil, secret, cid, nil)
+	text, err := cryptonx.Decrypter(key, clientSecret, clientID)
 	if err != nil {
 		return "", "", err
 	}
 	values := strings.Split(string(text), "|")
 	name = values[0]
 	id = values[1]
+	return
+}
+
+//ClientEncrypter encrypts new client
+func ClientEncrypter(key, appName, appID string) (clientID, clientSecret string, err error) {
+	clientID, clientSecret, err = cryptonx.Encrypter(key, appName+"|"+appID)
+	if err != nil {
+		log.Println("[ClientEncrypter] Erro ao encriptar texto: ", err.Error())
+		return
+	}
 	return
 }
 
