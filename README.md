@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Mercurius gives you speed to create new Go (golang) web applications and/or microservices. It lets you to be more focused on your business than in your backend.
-<br/><br/>
+
 Get a Go (golang) web application and/or microservice template that includes: Internationalization, Routers, Logging, Cache, Database, Jade/Pug Template Render Engine, JWT, oAuth 2.0, Prometheus and Docker. Built on top of Macaron, all items are configured and ready to use.
 
 # Getting Started
@@ -59,6 +59,7 @@ Application entry
 
 # Creating routes
 Setup all your routes inside the `SetupRoutes` func in `conf/app/app.go`
+
 ```go
 func SetupRoutes(app *macaron.Macaron) {
 	app.Group("", func() {
@@ -66,8 +67,6 @@ func SetupRoutes(app *macaron.Macaron) {
 	}, auth.LoginRequired)
 	app.Get("/login", handler.LoginPage)
 	app.Post("/login", binding.BindIgnErr(model.Login), handler.BasicAuth)
-	})
-
 }
 ```
 
