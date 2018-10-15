@@ -109,7 +109,7 @@ func terminal(question, defaultValue string) string {
 	text, err := reader.ReadString('\n')
 
 	if err != nil {
-		fmt.Printf("[Error]: %", err.Error)
+		fmt.Printf("[Error]: %s", err.Error())
 		os.Exit(-1)
 	}
 

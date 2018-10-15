@@ -28,11 +28,11 @@ var newCmd = &cobra.Command{
 		setApplicationPath()
 		copyNewAppFiles(confValues())
 		if debug {
-			fmt.Println("2 - copyNewAppFiles -> OK!\n")
+			fmt.Println("2 - copyNewAppFiles -> OK!")
 		}
 		packageStateCheck()
 		if debug {
-			fmt.Println("3 - packageStateCheck -> OK!\n")
+			fmt.Println("3 - packageStateCheck -> OK!")
 		}
 		vendorize()
 		fmt.Println("Congratulations. Your Application is ready at: ", appPath)
@@ -237,7 +237,7 @@ func packageStateCheck() {
 	out, _ := cmd.CombinedOutput()
 	msg := string(out)
 	if debug {
-	fmt.Println("Msg is: %",msg)
+		fmt.Println("Msg is: %", msg)
 	}
 	if msg != "" {
 		if runtime.GOOS == "windows" {
@@ -285,7 +285,7 @@ func getDependencies() {
 	fmt.Println("Getting all dependencies and waiting Go finishes the job...")
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Error getting dependencies. Process aborted: %q - err.Error: %q\n", err, err.Error)
+		fmt.Printf("Error getting dependencies. Process aborted: %v - err.Error: %s", err, err.Error())
 		os.Exit(-1)
 	}
 }
