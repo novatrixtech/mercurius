@@ -34,7 +34,7 @@ var newCmd = &cobra.Command{
 		if debug {
 			fmt.Println("3 - packageStateCheck -> OK!")
 		}
-		vendorize()
+		//vendorize()
 		fmt.Println("Congratulations. Your Application is ready at: ", appPath)
 	},
 }
@@ -42,7 +42,7 @@ var newCmd = &cobra.Command{
 const (
 	mercuriusPath = "github.com/novatrixtech/mercurius"
 	godepPath     = "github.com/tools/godep"
-	debug         = false
+	debug         = true
 )
 
 var (
@@ -229,15 +229,15 @@ func packageStateCheck() {
 		fmt.Printf("pkg.Dir: %q\n", pkg.Dir)
 	}
 	cd(pkg.Dir)
-	getDependencies()
-	fmt.Println("Get dependencies finished. Let's build you application.")
+	//getDependencies()
+	//fmt.Println("Get dependencies finished. Let's build you application.")
 
 	cmd := exec.Command("go", "build")
 	fmt.Println("Building your application...")
 	out, _ := cmd.CombinedOutput()
 	msg := string(out)
 	if debug {
-		fmt.Println("Msg is: %", msg)
+		fmt.Println("Msg is: ", msg)
 	}
 	if msg != "" {
 		if runtime.GOOS == "windows" {
