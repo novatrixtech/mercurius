@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/fatih/color"
 )
 
 //copy flies from src to dest
@@ -105,11 +107,11 @@ func mustCopyDir(destDir, srcDir string, data map[string]interface{}) error {
 // help to manipulate terminal input and output
 func terminal(question, defaultValue string) string {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println(fmt.Sprintf("%s (%s):", question, defaultValue))
+	printColored(fmt.Sprintf("%s (%s):", question, defaultValue), color.New(color.FgHiCyan).PrintlnFunc())
 	text, err := reader.ReadString('\n')
 
 	if err != nil {
-		fmt.Printf("[Error]: %s", err.Error())
+		printColored(fmt.Sprintf("[Error]: %s", err.Error()), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -122,4 +124,8 @@ func terminal(question, defaultValue string) string {
 		return defaultValue
 	}
 	return newtext
+}
+
+func printColored(message string, color func(a ...interface{})) {
+	color(message)
 }

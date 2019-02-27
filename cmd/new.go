@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -21,21 +22,21 @@ var newCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// checking number of arguments
 		if len(args) > 0 {
-			fmt.Println("Too many arguments")
+			printColored(fmt.Sprintf("Abort: Too many arguments. Expected: 0 and Found: %v", len(args)), color.New(color.FgHiRed).PrintlnFunc())
 			os.Exit(-1)
 		}
 		initGoPaths()
 		setApplicationPath()
 		copyNewAppFiles(confValues())
 		if debug {
-			fmt.Println("2 - copyNewAppFiles -> OK!")
+			printColored("2 - copyNewAppFiles -> OK!", color.New(color.FgGreen).PrintlnFunc())
 		}
 		packageStateCheck()
 		if debug {
-			fmt.Println("3 - packageStateCheck -> OK!")
+			printColored("3 - packageStateCheck -> OK!", color.New(color.FgGreen).PrintlnFunc())
 		}
 		//vendorize()
-		fmt.Println("Congratulations. Your Application is ready at: ", appPath)
+		printColored(fmt.Sprintf("Congratulations. Your Application is ready at: %s ", appPath), color.New(color.FgHiGreen, color.BgBlue).PrintlnFunc())
 	},
 }
 
@@ -64,8 +65,8 @@ func initGoPaths() {
 	// lookup go path
 	gopath = build.Default.GOPATH
 	if gopath == "" {
-		fmt.Println("Abort: GOPATH environment variable is not set. " +
-			"Please refer to http://golang.org/doc/code.html to configure your Go environment.")
+		printColored("Abort: GOPATH environment variable is not set. "+
+			"Please refer to http://golang.org/doc/code.html to configure your Go environment.", color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -73,7 +74,7 @@ func initGoPaths() {
 	var err error
 	_, err = exec.LookPath("go")
 	if err != nil {
-		fmt.Println("Go executable not found in PATH.")
+		printColored("Go executable not found in PATH.", color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -104,7 +105,7 @@ func initGoPaths() {
 
 func setApplicationPath() {
 	var err error
-	appName = terminal("What is your application name?", "")
+	appName = terminal("What is your application name?", "go-myapp")
 	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
 	gitUser := terminal("What is your git source host's username?", "")
 
@@ -118,7 +119,7 @@ func setApplicationPath() {
 
 	//check if import path is valid
 	if importPath == "" {
-		fmt.Println("Abort: could not create a Mercurius application with empty application path.")
+		printColored("Abort: could not create a Mercurius application with empty application path.", color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -126,18 +127,18 @@ func setApplicationPath() {
 	// since Go import path is valid relative path too.
 	// so check basic part of the path, which is "."
 	if filepath.IsAbs(importPath) || strings.HasPrefix(importPath, ".") {
-		fmt.Printf("Abort: '%s' looks like a directory.  Please provide a Go import path instead.\n", importPath)
+		printColored(fmt.Sprintf("Abort: '%s' looks like a directory.  Please provide a Go import path instead.\n", importPath), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
 	_, err = build.Import(importPath, "", build.FindOnly)
 	if err == nil {
-		fmt.Printf("Alert: Import path %s already exists.\n", importPath)
+		printColored(fmt.Sprintf("Alert: Import path %s already exists.\n", importPath), color.New(color.FgHiYellow).PrintlnFunc())
 	}
 
 	mercuriusPkg, err = build.Import(mercuriusPath, "", build.FindOnly)
 	if err != nil {
-		fmt.Printf("Abort: Could not find Mercurius source code: %s\n", err)
+		printColored(fmt.Sprintf("Abort: Could not find Mercurius source code: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -157,6 +158,10 @@ func setApplicationPath() {
 	skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
 
 	if debug {
+
+		color.Set(color.FgHiMagenta)
+		defer color.Unset()
+
 		fmt.Println("1 - Your runtime is: ", runtime.GOOS)
 		if runtime.GOOS == "windows" {
 			fmt.Printf(" skeletonPath: %s \n", skeletonPath)
@@ -174,7 +179,7 @@ func copyNewAppFiles(cfgs map[string]interface{}) {
 	var err error
 	err = os.MkdirAll(appPath, 0777)
 	if err != nil {
-		fmt.Printf("Abort: Could not generate app %s\n", err)
+		printColored(fmt.Sprintf("Abort: Could not generate app %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 
@@ -212,7 +217,7 @@ func confValues() map[string]interface{} {
 	cfgs["CacheType"] = cache
 	cfgs["CacheCfgs"] = terminal("What is your cache server address?", cacheMap[cache])
 	if cache != "memory" {
-		fmt.Println("Don't forget to adjust cache config settings at app.go after the App being built.")
+		printColored("Don't forget to adjust cache config settings at app.go after the App being built.", color.New(color.FgHiYellow).PrintlnFunc())
 		fmt.Println(" ")
 	}
 	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
@@ -226,18 +231,20 @@ func packageStateCheck() {
 	pkg := getGeneratedCode()
 
 	if debug {
-		fmt.Printf("pkg.Dir: %q\n", pkg.Dir)
+		printColored(fmt.Sprintf("pkg.Dir: %q", pkg.Dir), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 	cd(pkg.Dir)
 	//getDependencies()
 	//fmt.Println("Get dependencies finished. Let's build you application.")
 
 	cmd := exec.Command("go", "build")
-	fmt.Println("Building your application...")
+
+	printColored("Building your application...", color.New(color.FgHiYellow).PrintlnFunc())
+
 	out, _ := cmd.CombinedOutput()
 	msg := string(out)
 	if debug {
-		fmt.Println("Msg is: ", msg)
+		printColored(fmt.Sprintf("Msg is: %s", msg), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 	if msg != "" {
 		if runtime.GOOS == "windows" {
@@ -247,7 +254,7 @@ func packageStateCheck() {
 		}
 		err := cmd.Run()
 		if err != nil {
-			fmt.Printf("Abort: %s\n", err)
+			printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 			os.Exit(-1)
 		}
 	}
@@ -257,12 +264,12 @@ func packageStateCheck() {
 func getGeneratedCode() *build.Package {
 
 	if debug {
-		fmt.Printf("importPath: %q\n\n\n", importPath)
+		printColored(fmt.Sprintf("importPath: %q\n\n\n", importPath), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 
 	pkg, err := build.Import(importPath, "", build.FindOnly)
 	if err != nil {
-		fmt.Printf("Abort: Could not find generated app: %s\n", err)
+		printColored(fmt.Sprintf("Abort: Could not find generated app: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 	return pkg
@@ -274,7 +281,7 @@ func getGodep() {
 		cmd := exec.Command("go", "get", godepPath)
 		err = cmd.Run()
 		if err != nil {
-			fmt.Printf("Abort: %s\n", err)
+			printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 			os.Exit(-1)
 		}
 	}
@@ -282,10 +289,10 @@ func getGodep() {
 
 func getDependencies() {
 	cmd := exec.Command("go", "get", "./...")
-	fmt.Println("Getting all dependencies and waiting Go finishes the job...")
+	printColored("Getting all dependencies and waiting Go finishes the job...", color.New(color.FgHiYellow).PrintlnFunc())
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Error getting dependencies. Process aborted: %v - err.Error: %s", err, err.Error())
+		printColored(fmt.Sprintf("Error getting dependencies. Process aborted: %v - err.Error: %s", err, err.Error()), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 }
@@ -293,19 +300,19 @@ func getDependencies() {
 func vendorize() {
 	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
-		fmt.Println("Vendorizing...")
+		printColored("Vendorizing...", color.New(color.FgHiYellow).PrintlnFunc())
 		//getDependencies()
 		//getGodep()
 		pkg := getGeneratedCode()
 
 		cd(pkg.Dir)
 
-		fmt.Println("Executing godep...")
+		printColored("Executing godep...", color.New(color.FgHiYellow).PrintlnFunc())
 		cmd := exec.Command("godep", "save")
-		fmt.Println("Godep executed...")
+		printColored("Godep executed...", color.New(color.FgHiYellow).PrintlnFunc())
 		err := cmd.Run()
 		if err != nil {
-			fmt.Printf("Abort: %s\n", err)
+			printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 			os.Exit(-1)
 		}
 		return
@@ -316,7 +323,7 @@ func vendorize() {
 func cd(dir string) {
 	err := os.Chdir(dir)
 	if err != nil {
-		fmt.Printf("Abort: %s\n", err)
+		printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 }
