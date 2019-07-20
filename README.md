@@ -59,7 +59,6 @@ Application entry
 ## Build 
 
 To build it uses env GO111MODULE=on go build for Mac or GO111MODULE=on go build for Linux or define GO111MODULE on your Windows
-
 ```
 
 # Creating routes
