@@ -11,7 +11,6 @@ require (
 	github.com/fatih/color v1.7.0
 	github.com/felipeweb/gopher-utils v0.0.0-20161101033030-05a00fc86ef5
 	github.com/go-floki/jade v0.0.0-20150315103554-709925beb63a // indirect
-	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-macaron/binding v0.0.0-20170611065819-ac54ee249c27
 	github.com/go-macaron/cache v0.0.0-20151013081102-561735312776
 	github.com/go-macaron/gzip v0.0.0-20160222043647-cad1c6580a07
