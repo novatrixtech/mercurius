@@ -9,6 +9,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20180901172138-1eb28afdf9b6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fatih/color v1.7.0
 	github.com/felipeweb/gopher-utils v0.0.0-20161101033030-05a00fc86ef5
 	github.com/fsnotify/fsnotify v0.0.0-20170127061010-a904159b9206 // indirect
 	github.com/go-floki/jade v0.0.0-20150315103554-709925beb63a // indirect
@@ -32,6 +33,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.0.0
 	github.com/magiconair/properties v0.0.0-20170113111004-b3b15ef068fd // indirect
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-sqlite3 v1.9.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20170125051937-db1efb556f84 // indirect
@@ -54,7 +56,6 @@ require (
 	github.com/stretchr/testify v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20181009213950-7c1a557ab941 // indirect
 	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f // indirect
-	golang.org/x/sys v0.0.0-20170210163038-aaabbdc969c3 // indirect
 	google.golang.org/appengine v1.2.0 // indirect
 	gopkg.in/bufio.v1 v1.0.0-20140618132640-567b2bfa514e // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
