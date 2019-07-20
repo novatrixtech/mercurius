@@ -38,7 +38,6 @@ require (
 	github.com/novatrixtech/cryptonx v0.0.0-20180519121813-ea6eb897e271
 	github.com/pelletier/go-buffruneio v0.1.0 // indirect
 	github.com/pelletier/go-toml v0.0.0-20170209213835-c9506ee96398 // indirect
-	github.com/plutov/mercurius v0.0.0-20180807101951-1ce6ad5f76e0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v0.8.0
 	github.com/prometheus/client_model v0.0.0-20180712105110-5c3871d89910 // indirect

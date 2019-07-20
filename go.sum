@@ -77,8 +77,6 @@ github.com/pelletier/go-buffruneio v0.1.0 h1:ig6N9Cg71k/P+UUbhwdOFtJWz+qa8/3by7A
 github.com/pelletier/go-buffruneio v0.1.0/go.mod h1:JkE26KsDizTr40EUHkXVtNPvgGtbSNq5BcowyYOWdKo=
 github.com/pelletier/go-toml v0.0.0-20170209213835-c9506ee96398 h1:jBN4KR1EhUgSE3XO4WqFQdQuK75kZkaiCY8YBBNN0ts=
 github.com/pelletier/go-toml v0.0.0-20170209213835-c9506ee96398/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
-github.com/plutov/mercurius v0.0.0-20180807101951-1ce6ad5f76e0 h1:lwa086w6Z4fQdX0Pm6dGCFdIiK61jLHe3ybN7e/E56A=
-github.com/plutov/mercurius v0.0.0-20180807101951-1ce6ad5f76e0/go.mod h1:h8vZlWVecJT0Adla2skdUjnEAv03upRUAkJ3zyKwt9A=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/prometheus/client_golang v0.8.0 h1:1921Yw9Gc3iSc4VQh3PIoOqgPCZS7G/4xQNVUp8Mda8=
