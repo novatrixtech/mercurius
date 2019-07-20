@@ -15,7 +15,7 @@ import (
 	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/cors"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/template"
-	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"gopkg.in/macaron.v1"
 )
 
@@ -71,7 +71,7 @@ func SetupRoutes(app *macaron.Macaron) {
 	}, auth.LoginRequired)
 	//HealthChecker
 	app.Get("/health", handler.HealthCheck)
-	app.Get("/metrics", prometheus.Handler())
+	app.Get("/metrics", promhttp.Handler())
 	app.Get("/login", handler.LoginPage)
 	app.Post("/login", binding.BindIgnErr(contx.Login{}), handler.BasicAuth)
 	app.Group("/api/v1", func() {
