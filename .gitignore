@@ -26,3 +26,4 @@ mercurius.iml
 .idea
 .DS_Store
 go.sum
+examples/simple/simple
