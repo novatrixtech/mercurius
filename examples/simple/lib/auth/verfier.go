@@ -2,76 +2,101 @@ package auth
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/novatrixtech/mercurius/examples/simple/lib/contx"
-	"github.com/novatrixtech/mercurius/examples/simple/repo"
+	"github.com/dgrijalva/jwt-go"
 )
 
-const cookie_name = "mercuriusAuth"
+const cookieName = "mercurius-sample"
 
+//Oauth estrutura de chave de autenticacao
 type Oauth struct {
-	Id     string `json:"id"`
+	ID     string `json:"id"`
 	Secret string `json:"secret"`
 }
 
+// Claims dados a serem recuperados da chave
 type Claims struct {
-	Ip string `json:"ip"`
+	IP string `json:"ip"`
 	jwt.StandardClaims
 }
 
+// App aplicacao a ser validada o acesso
 type App struct {
 	Name string `json:"name"`
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 }
 
-var DB map[Oauth]*App = make(map[Oauth]*App)
+//DB mapea o acesso a banco de dados que validara as credenciais
+var DB = make(map[Oauth]*App)
 
+// LoginRequired valida a existencia ou nao de cookies para acesso a telas
 func LoginRequired(ctx *contx.Context) {
-	cookie, err := ctx.Req.Cookie(cookie_name)
+	cookie, err := ctx.Req.Cookie(cookieName)
 	if err != nil {
 		ctx.Redirect("/login")
+		log.Println(err)
 		return
 	}
 	token, err := jwt.ParseWithClaims(cookie.Value, &Claims{}, parse)
 	if err != nil {
 		ctx.Redirect("/login")
+		log.Println(err)
 		return
 	}
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.Ip {
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.IP {
 		ctx.Data["jwt"] = *claims
 	} else {
 		ctx.Redirect("/login")
+		log.Println("Cause: Invalid token")
 	}
 }
 
-func LoginRequiredApi(ctx *contx.Context) {
+// LoginRequiredAPI valida login para realizacao de chamadas de API
+func LoginRequiredAPI(ctx *contx.Context) {
 	header := ctx.Req.Header.Get("Authorization")
 	if header != "" {
-		value := strings.Split(header, " ")[1]
+		splitted := strings.Split(header, " ")
+		if len(splitted) < 2 {
+			ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Malformed request header"})
+			return
+		}
+		value := splitted[1]
 		token, err := jwt.ParseWithClaims(value, &Claims{}, parse)
 		if err != nil {
 			ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 			return
 		}
-		if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.Ip {
+		if claims, ok := token.Claims.(*Claims); ok && token.Valid && ctx.RemoteAddr() == claims.IP {
 			ctx.Data["jwt"] = *claims
 			return
-		} else {
-			ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
-			return
 		}
+		ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+		return
 	}
 	ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+}
+
+//LoginRequiredAPISystem verifica se as credenciais para executar chamadas na API no nivel sistema estao OK
+func LoginRequiredAPISystem(ctx *contx.Context) {
+	var err error
+	rolesAllowed := []string{"12"}
+	_, err = ValidateAuthorizationHeader(ctx.Req.Header, "APIETHOperations", rolesAllowed)
+	if err != nil {
+		log.Println("[InsereInscricaoCursos] Erro na autorização do AC: " + err.Error())
+		ctx.JSON(http.StatusUnauthorized, "{'error':'Access Token invalid'}")
+		return
+	}
 }
 
 /*
 ValidateAuthorizationHeader checks if the Authorization Header contains an Access Token and if it is still valid
 */
-func ValidateAuthorizationHeader(authHeader http.Header, funcName string, rolesAllowed []int) (contatoID int, err error) {
+func ValidateAuthorizationHeader(authHeader http.Header, funcName string, rolesAllowed []string) (contatoID int, err error) {
 	err = nil
 	var ac string
 	items, ok := authHeader["Authorization"]
@@ -108,7 +133,7 @@ func ValidateAuthorizationHeader(authHeader http.Header, funcName string, rolesA
 		err = errors.New("Access Token expirado")
 		return
 	}
-	go repo.AddAccessTokenAccessLog(ac, funcName)
+	go AddAccessTokenAccessLog(ac, funcName)
 	contatoID = acObj.ContatoID
 	return
 }

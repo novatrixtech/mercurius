@@ -71,6 +71,30 @@ func SetupRoutes(app *macaron.Macaron) {
 
 	//Prometheus metrics
 	app.Get("/metrics", promhttp.Handler())
+
+	/*
+	
+	//Basic OAuth2 endpoint templates
+	app.Group("/oauth2", func() {
+		app.Get("/token", auth.GetAccessToken)
+		app.Get("/credentials/:idclient", auth.GetOauthUserCredentials)
+		app.Post("/initializecredentials", auth.InitializeUserCredentials)
+	})
+
+	*/
+
+	/*
+
+	//Example how to bind request params into a struct and inject into Handler and endpoints protected 
+	//with OAuth2 authentication
+	app.Group("/api", func() {
+		app.Group("/v1", func() {
+			app.Post("/test/send", binding.Bind(model.SendRequestForm{}), handler.SendHandler)
+			app.Post("/wallet", binding.Bind(model.WalletRequestJSON{}}), handler.CreateWalletHandler)
+		})
+	}, auth.LoginRequiredAPISystem)
+
+	*/
 	
 	/*
 		//An example to test DB connection
