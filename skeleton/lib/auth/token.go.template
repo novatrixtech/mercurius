@@ -1,16 +1,16 @@
 package auth
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"encoding/hex"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"{{.AppPath}}/conf"
-	"{{.AppPath}}/lib/contx"
+	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"{{.AppPath}}/conf"
+	"{{.AppPath}}/lib/contx"
+	"github.com/novatrixtech/cryptonx"
 )
 
 // CreateJWTCookie create cookie with jwt token
@@ -18,7 +18,7 @@ func CreateJWTCookie(jwtID string, issuer string, ctx *contx.Context) {
 	ip := ctx.RemoteAddr()
 	expireCookie := time.Now().Add(time.Hour * 1)
 	signedToken := generateJWTToken(jwtID, ip, issuer)
-	cookie := http.Cookie{Name: cookie_name, Value: signedToken, Expires: expireCookie, HttpOnly: true}
+	cookie := http.Cookie{Name: cookieName, Value: signedToken, Expires: expireCookie, HttpOnly: true}
 	http.SetCookie(ctx.Resp, &cookie)
 
 }
@@ -26,12 +26,12 @@ func CreateJWTCookie(jwtID string, issuer string, ctx *contx.Context) {
 // GenerateJWTToken generate jwt token
 func GenerateJWTToken(app *App, ctx *contx.Context) string {
 	ip := ctx.RemoteAddr()
-	return generateJWTToken(app.Id, ip, app.Name)
+	return generateJWTToken(app.ID, ip, app.Name)
 }
 
 // InvalidateJWTToken invalidate jwt token
 func InvalidateJWTToken(ctx *contx.Context) {
-	deleteCookie := http.Cookie{Name: cookie_name, Value: "none", Expires: time.Now()}
+	deleteCookie := http.Cookie{Name: cookieName, Value: "none", Expires: time.Now()}
 	http.SetCookie(ctx.Resp, &deleteCookie)
 }
 
@@ -42,7 +42,7 @@ func generateJWTToken(jwtID string, ip string, issuer string) string {
 		issuer = "localhost:8080"
 	}
 	claims := Claims{
-		Ip: ip,
+		IP: ip,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireToken,
 			Issuer:    issuer,
