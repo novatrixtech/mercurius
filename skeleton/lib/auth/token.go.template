@@ -8,25 +8,23 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"{{.AppPath}}/conf"
-	"{{.AppPath}}/lib/contx"
+	"github.com/jeffprestes/curso-go-web/conf"
+	"github.com/jeffprestes/curso-go-web/lib/contx"
 	"github.com/novatrixtech/cryptonx"
 )
 
 // CreateJWTCookie create cookie with jwt token
-func CreateJWTCookie(jwtID string, issuer string, ctx *contx.Context) {
+func CreateJWTCookie(ID string, issuer string, expiration int, ctx *contx.Context) (err error) {
 	ip := ctx.RemoteAddr()
-	expireCookie := time.Now().Add(time.Hour * 1)
-	signedToken := generateJWTToken(jwtID, ip, issuer)
+	expireCookie := time.Now().Add(time.Second * time.Duration(expiration))
+	signedToken, err := generateJWTToken(ID, ip, issuer, expiration)
+	if err != nil {
+		log.Println("CreateJWTCookie error generating JWT: ", err.Error())
+		return
+	}
 	cookie := http.Cookie{Name: cookieName, Value: signedToken, Expires: expireCookie, HttpOnly: true}
 	http.SetCookie(ctx.Resp, &cookie)
-
-}
-
-// GenerateJWTToken generate jwt token
-func GenerateJWTToken(app *App, ctx *contx.Context) string {
-	ip := ctx.RemoteAddr()
-	return generateJWTToken(app.ID, ip, app.Name)
+	return
 }
 
 // InvalidateJWTToken invalidate jwt token
@@ -35,8 +33,8 @@ func InvalidateJWTToken(ctx *contx.Context) {
 	http.SetCookie(ctx.Resp, &deleteCookie)
 }
 
-func generateJWTToken(jwtID string, ip string, issuer string) string {
-	expireToken := time.Now().Add(time.Hour * 1).Unix()
+func generateJWTToken(ID string, ip string, issuer string, expiration int) (signedToken string, err error) {
+	expireToken := time.Now().Add(time.Second * time.Duration(expiration)).Unix()
 
 	if issuer == "" {
 		issuer = "localhost:8080"
@@ -46,13 +44,17 @@ func generateJWTToken(jwtID string, ip string, issuer string) string {
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireToken,
 			Issuer:    issuer,
-			Id:        jwtID,
+			Id:        ID,
 		},
 	}
-
+	log.Printf("generateJWTToken Claims: %+v\n", claims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString([]byte(conf.Cfg.Section("").Key("oauth_key").Value()))
-	return signedToken
+	signedToken, err = token.SignedString([]byte(conf.Cfg.Section("").Key("oauth_key").Value()))
+	if err != nil {
+		log.Println("generateJWTToken error signing: ", err.Error())
+		return
+	}
+	return
 }
 
 // ClientDecrypter decrypt client token

@@ -1,5 +1,8 @@
 package auth
 
+const cookieName = "exemplo_cliente"
+const jwtIssuerName = "exemploClienteApp"
+
 // AccessTokenCache stores AccessToken generated and when it was generated
 var AccessTokenCache map[string]AccessTokenData
 

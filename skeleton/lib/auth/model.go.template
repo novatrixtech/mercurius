@@ -1,6 +1,10 @@
 package auth
 
-import "time"
+import (
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
+)
 
 //AcessoAPI acesso à API
 type AcessoAPI struct {
@@ -28,10 +32,19 @@ type AccessTokenPublic struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-//OAuthUser represents user associated to ClientID and Secret
-type OAuthUser struct {
-	UserID   int    `json:"user_id"`
-	Name     string `json:"name,omitempty"`
-	ClientID string `json:"clientID,omitempty"`
-	Secret   string `json:"secret,omitempty"`
+//User represents user associated to ClientID and Secret
+type User struct {
+	ID                int    `json:"user_id" db:"logcli_id"`
+	LegacyOrPartnerID string `json:"legacy_partner_id" db:"logcli_clientlegacyid"`
+	Name              string `json:"name,omitempty" db:"logcli_clientname"`
+	ClientID          string `json:"clientID,omitempty" form:"formEmail" db:"logcli_clientid"`
+	Secret            string `json:"secret,omitempty" form:"formSenha" db:"logcli_secret"`
+	Role              string `db:"logcli_role"`
+	LastUpdate        string `db:"logcli_lastupdate"`
+}
+
+// Claims dados a serem recuperados da chave
+type Claims struct {
+	IP string `json:"ip"`
+	jwt.StandardClaims
 }
