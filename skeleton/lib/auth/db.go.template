@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/jeffprestes/curso-go-web/conf"
+	"{{.AppPath}}/conf"
 )
 
 //AddAccessTokenAccessLog adds log when an user call the API using an Access Token

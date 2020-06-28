@@ -14,8 +14,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/novatrixtech/cryptonx"
 
-	"github.com/jeffprestes/curso-go-web/conf"
-	"github.com/jeffprestes/curso-go-web/lib/contx"
+	"{{.AppPath}}/conf"
+	"{{.AppPath}}/lib/contx"
 )
 
 //InitializeUserCredentials stores user's credentials at OAuth Database

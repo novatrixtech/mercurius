@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jeffprestes/curso-go-web/conf"
+	"{{.AppPath}}/conf"
 	"github.com/novatrixtech/cryptonx"
 )
 

@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/jeffprestes/curso-go-web/conf"
-	"github.com/jeffprestes/curso-go-web/lib/contx"
+	"{{.AppPath}}/conf"
+	"{{.AppPath}}/lib/contx"
 	"github.com/novatrixtech/cryptonx"
 )
 
