@@ -27,3 +27,4 @@ mercurius.iml
 .DS_Store
 go.sum
 examples/simple/simple
+__debug_bin
