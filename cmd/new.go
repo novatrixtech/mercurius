@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-
 	"go/build"
 	"os"
 	"os/exec"
@@ -35,7 +34,7 @@ var newCmd = &cobra.Command{
 		if debug {
 			printColored("3 - packageStateCheck -> OK!", color.New(color.FgGreen).PrintlnFunc())
 		}
-		//vendorize()
+		// vendorize()
 		printColored(fmt.Sprintf("Congratulations. Your Application is ready at: %s ", appPath), color.New(color.FgHiGreen, color.BgBlue).PrintlnFunc())
 	},
 }
@@ -78,7 +77,7 @@ func initGoPaths() {
 		os.Exit(-1)
 	}
 
-	//support relative path
+	// support relative path
 	workingDir, _ := os.Getwd()
 	goPathList := filepath.SplitList(gopath)
 	for _, path := range goPathList {
@@ -109,15 +108,15 @@ func setApplicationPath() {
 	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
 	gitUser := terminal("What is your git source host's username?", "")
 
-	//check if gitUser is not empty to put gitUser between slashes
+	// check if gitUser is not empty to put gitUser between slashes
 	if gitUser != "" {
 		gitUser = fmt.Sprintf("/%s", gitUser)
 	}
 
-	//build import path
+	// build import path
 	importPath = fmt.Sprintf("%s%s/%s", gitPath, gitUser, appName)
 
-	//check if import path is valid
+	// check if import path is valid
 	if importPath == "" {
 		printColored("Abort: could not create a Mercurius application with empty application path.", color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
@@ -136,12 +135,6 @@ func setApplicationPath() {
 		printColored(fmt.Sprintf("Alert: Import path %s already exists.\n", importPath), color.New(color.FgHiYellow).PrintlnFunc())
 	}
 
-	mercuriusPkg, err = build.Import(mercuriusPath, "", build.FindOnly)
-	if err != nil {
-		printColored(fmt.Sprintf("Abort: Could not find Mercurius source code: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
-		os.Exit(-1)
-	}
-
 	appPath = filepath.Join(srcRoot, filepath.FromSlash(importPath))
 	basePath = filepath.ToSlash(filepath.Dir(importPath))
 
@@ -155,7 +148,8 @@ func setApplicationPath() {
 		basePath += "/"
 	}
 	// set base project path
-	skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
+	// skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
+	skeletonPath = filepath.Join(os.Getenv("GOPATH"), "/src/", "github.com/novatrixtech/mercurius", "skeleton")
 
 	if debug {
 
@@ -163,15 +157,15 @@ func setApplicationPath() {
 		defer color.Unset()
 
 		fmt.Println("1 - Your runtime is: ", runtime.GOOS)
-		if runtime.GOOS == "windows" {
-			fmt.Printf(" skeletonPath: %s \n", skeletonPath)
-			fmt.Printf(" appName: %s \n", appName)
-			fmt.Printf(" gitPath: %s \n", gitPath)
-			fmt.Printf(" gitUser: %s \n", gitUser)
-			fmt.Printf(" import-Path: %s \n", importPath)
-			fmt.Printf(" app-Path: %s \n", appPath)
-			fmt.Printf(" base-Path: %s \n\n", basePath)
-		}
+		// if runtime.GOOS == "windows" {
+		fmt.Printf(" skeletonPath: %s \n", skeletonPath)
+		fmt.Printf(" appName: %s \n", appName)
+		fmt.Printf(" gitPath: %s \n", gitPath)
+		fmt.Printf(" gitUser: %s \n", gitUser)
+		fmt.Printf(" import-Path: %s \n", importPath)
+		fmt.Printf(" app-Path: %s \n", appPath)
+		fmt.Printf(" base-Path: %s \n\n", basePath)
+		// }
 	}
 }
 
@@ -188,7 +182,6 @@ func copyNewAppFiles(cfgs map[string]interface{}) {
 	// Dotfiles are skipped by mustCopyDir, so we have to explicitly copy the .gitignore.
 	gitignore := ".gitignore"
 	mustCopyFile(filepath.Join(appPath, gitignore), filepath.Join(skeletonPath, gitignore))
-
 }
 
 func confValues() map[string]interface{} {
@@ -220,7 +213,7 @@ func confValues() map[string]interface{} {
 		printColored("Don't forget to adjust cache config settings at app.go after the App being built.", color.New(color.FgHiYellow).PrintlnFunc())
 		fmt.Println(" ")
 	}
-	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "")
+	cfgs["Key"] = terminal("What is your oauth key (key size must be 24 or 32)?", "12345678901234567890123456789012")
 	cfgs["HttpPort"] = terminal("What is your HTTP port?", "8080")
 	cfgs["MongoURI"] = terminal("What is your MongoDB URI?", "mongodb://localhost:27017/myMongoDb")
 	cfgs["MongoDBName"] = terminal("What is your MongoDB database name?", "myMongoDb")
@@ -228,15 +221,19 @@ func confValues() map[string]interface{} {
 }
 
 func packageStateCheck() {
-	pkg := getGeneratedCode()
-
+	cd(os.Getenv("GOPATH") + "/src/" + importPath)
 	if debug {
-		printColored(fmt.Sprintf("pkg.Dir: %q", pkg.Dir), color.New(color.FgHiMagenta).PrintlnFunc())
+		printColored(fmt.Sprintf("pkg.Dir: %q", os.Getenv("GOPATH")+"/src/"+importPath), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
-	cd(pkg.Dir)
-	//getDependencies()
-	//fmt.Println("Get dependencies finished. Let's build you application.")
+	printColored("Generating go modules.", color.New(color.FgHiMagenta).PrintlnFunc())
+	cmdGoMod := exec.Command("go", "mod", "tidy")
+	cmdGoMod.Run()
 
+	pkg := getGeneratedCode()
+	getDependencies()
+	printColored("Get dependencies finished. Let's build you application.", color.New(color.FgHiMagenta).PrintlnFunc())
+
+	printColored("Preparing to build your app...", color.New(color.FgHiMagenta).PrintlnFunc())
 	cmd := exec.Command("go", "build")
 
 	printColored("Building your application...", color.New(color.FgHiYellow).PrintlnFunc())
@@ -258,18 +255,16 @@ func packageStateCheck() {
 			os.Exit(-1)
 		}
 	}
-
 }
 
 func getGeneratedCode() *build.Package {
-
 	if debug {
-		printColored(fmt.Sprintf("importPath: %q\n\n\n", importPath), color.New(color.FgHiMagenta).PrintlnFunc())
+		printColored(fmt.Sprintf("importPath: %s - absolutePath: %s\n", importPath, os.Getenv("GOPATH")+"/src/"+importPath), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 
 	pkg, err := build.Import(importPath, "", build.FindOnly)
 	if err != nil {
-		printColored(fmt.Sprintf("Abort: Could not find generated app: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
+		printColored(fmt.Sprintf("Abort: Could not find generated app: %s - importPath: %s - absolutePath: %s\n", err.Error(), importPath, os.Getenv("GOPATH")+"/src/"+importPath), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
 	}
 	return pkg
@@ -301,8 +296,8 @@ func vendorize() {
 	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
 		printColored("Vendorizing...", color.New(color.FgHiYellow).PrintlnFunc())
-		//getDependencies()
-		//getGodep()
+		// getDependencies()
+		// getGodep()
 		pkg := getGeneratedCode()
 
 		cd(pkg.Dir)
