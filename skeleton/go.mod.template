@@ -1,0 +1,3 @@
+module {{.AppPath}}
+
+go 1.16
