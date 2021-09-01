@@ -13,7 +13,7 @@ func AddAccessTokenAccessLog(accessToken string, funcName string) (err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[AddAccessTokenAccessLog] Erro Pegando o DB: " + err.Error())
+		log.Println("[AddAccessTokenAccessLog] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := "INSERT INTO logac_accesstokenacessos (logac_accesstoken, logac_funcao, logac_quando) VALUES (?,?,NOW())"
@@ -26,13 +26,13 @@ func AddAccessTokenRequestLog(accessToken string, contatoID int) (err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[AddAccessTokenRequestLog] Erro Pegando o DB: " + err.Error())
+		log.Println("[AddAccessTokenRequestLog] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := "INSERT INTO logacr_logaccesstokenrequest (logacr_accesstoken, contato_id, logacr_when) VALUES (?,?,NOW())"
 	_, err = db.Exec(sql, accessToken, contatoID)
 	if err != nil {
-		log.Println("[AddAccessTokenRequestLog] Erro ao executar a query: ", sql, " com os parametros: [", accessToken, "] e [", contatoID, "] - Erro: ", err.Error())
+		log.Println("[AddAccessTokenRequestLog] Error inserting into the db. Query: ", sql, " parameters: [", accessToken, "] and [", contatoID, "] - Error: ", err.Error())
 	}
 	return
 }
@@ -42,7 +42,7 @@ func GetUserRoleByContactID(contactID int) (role string, err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[GetUserRoleByContactID] Erro Pegando o DB: " + err.Error())
+		log.Println("[GetUserRoleByContactID] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := `select 
@@ -53,7 +53,7 @@ func GetUserRoleByContactID(contactID int) (role string, err error) {
 				a.logcli_clientlegacyid = ?`
 	err = db.Get(&role, sql, contactID)
 	if err != nil {
-		log.Println("[GetUserRoleByContactID] Erro ao executar a query: ", sql, " com o parametro: ", contactID, " - Erro: ", err.Error())
+		log.Println("[GetUserRoleByContactID] Error running query: ", sql, " parameter: ", contactID, " - Error: ", err.Error())
 		return
 	}
 	return
@@ -64,7 +64,7 @@ func GetUserNameByContactID(contactID int) (name string, err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[GetUserNameByContactID] Erro Pegando o DB: " + err.Error())
+		log.Println("[GetUserNameByContactID] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := `select 
@@ -75,7 +75,7 @@ func GetUserNameByContactID(contactID int) (name string, err error) {
 				logcli_id=?`
 	err = db.Get(&name, sql, contactID)
 	if err != nil {
-		log.Println("[GetUserNameByContactID] Erro ao executar a query: ", sql, " com o parametro: ", contactID, " - Erro: ", err.Error())
+		log.Println("[GetUserNameByContactID] Error running query: ", sql, " parameter: ", contactID, " - Error: ", err.Error())
 		return
 	}
 	return
@@ -86,7 +86,7 @@ func GetUserByID(ID int) (user User, err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[GetUserByID] Erro Pegando o DB: " + err.Error())
+		log.Println("[GetUserByID] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := `select 
@@ -99,7 +99,7 @@ func GetUserByID(ID int) (user User, err error) {
 				logcli_id=?`
 	err = db.Get(&user, sql, ID)
 	if err != nil {
-		log.Println("[GetUserByID] Erro ao executar a query: ", sql, " com o parametro: ", ID, " - Erro: ", err.Error())
+		log.Println("[GetUserByID] Error running query: ", sql, " parameter: ", ID, " - Error: ", err.Error())
 		return
 	}
 	return
@@ -110,16 +110,15 @@ func AddCredentialsToUser(user User, role string) (err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[AddCredentialsToUser] Erro Pegando o DB: " + err.Error())
+		log.Println("[AddCredentialsToUser] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := "INSERT INTO logcli_loginclient (logcli_clientlegacyid, logcli_clientname, logcli_role, logcli_clientid, logcli_secret) VALUES (?, ?, ?, ?, ?)"
 	_, err = db.Exec(sql, user.ID, user.Name, role, user.ClientID, user.Secret)
 	if err != nil {
-		log.Println("[AddCredentialsToUser] Erro ao executar a query: ", sql, " com os parametros: [", user.ID, "] e [", user.ClientID, "] e [", user.Secret, "] - Erro: ", err.Error())
+		log.Println("[AddCredentialsToUser] Error inserting into the db:: ", sql, " parameters: [", user.ID, "], [", user.ClientID, "] and [", user.Secret, "] - Error: ", err.Error())
 		return
 	}
-	//log.Println("[AddCredentialsToUser] executado a query: ", sql, " com os parametros: [", user.UserID, "] e [", clientID, "] e [", secret, "] ")
 	return
 }
 
@@ -128,16 +127,15 @@ func UpdateUserCredentials(user User, clientID string, secret string) (err error
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[UpdateUserCredentials] Erro Pegando o DB: " + err.Error())
+		log.Println("[UpdateUserCredentials] Error getting db connection: " + err.Error())
 		return
 	}
 	sql := "UPDATE logcli_loginclient SET logcli_clientid = ?, logcli_secret = ? , logcli_lastupdate = now() WHERE igotyou_id = ?"
 	_, err = db.Exec(sql, clientID, secret, user.ID)
 	if err != nil {
-		log.Println("[UpdateUserCredentials] Erro ao executar a query: ", sql, " com os parametros: [", clientID, "] e [", secret, "] e [", user.ID, "] - Erro: ", err.Error())
+		log.Println("[UpdateUserCredentials] Error updating th db: ", sql, " parameters: [", clientID, "], [", secret, "] and [", user.ID, "] - Error: ", err.Error())
 		return
 	}
-	//log.Println("[UpdateUserCredentials] Executado a query: ", sql, " com os parametros: [", user.UserID, "] e [", clientID, "] e [", secret, "]")
 	return
 }
 
@@ -146,7 +144,7 @@ func GetUserCredentials(user User) (clientID string, secret string, err error) {
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[GetUserCredentials] Erro Pegando o DB: " + err.Error())
+		log.Println("[GetUserCredentials] Error getting db connection: " + err.Error())
 		return
 	}
 	strSQL := "SELECT coalesce(logcli_clientid, '') as clientID, coalesce(logcli_secret, '') as secret FROM logcli_loginclient WHERE logcli_clientlegacyid = ?"
@@ -156,7 +154,7 @@ func GetUserCredentials(user User) (clientID string, secret string, err error) {
 		if err == sql.ErrNoRows {
 			return
 		}
-		log.Println("[GetUserCredentials] Erro ao executar a query: ", strSQL, " com os parametros: [", user.ID, "]  - Erro: ", err.Error())
+		log.Println("[GetUserCredentials] Error running query: ", strSQL, " parameter: [", user.ID, "]  - Error: ", err.Error())
 		return
 	}
 	return
@@ -167,7 +165,7 @@ func GetUserCredentialsByLogin(clientID string, secret string) (user User, err e
 	err = nil
 	db, err := conf.GetDB()
 	if err != nil {
-		log.Println("[GetUserCredentialsByID] Erro Pegando o DB: " + err.Error())
+		log.Println("[GetUserCredentialsByID] Error getting db connection: " + err.Error())
 		return
 	}
 	strSQL := `SELECT 
@@ -181,7 +179,7 @@ func GetUserCredentialsByLogin(clientID string, secret string) (user User, err e
 		if err == sql.ErrNoRows {
 			return
 		}
-		log.Println("[GetUserCredentialsByLogin] Erro ao executar a query: ", strSQL, " com os parametros: [", clientID, "]  - Erro: ", err.Error())
+		log.Println("[GetUserCredentialsByLogin] Error running query: ", strSQL, " parameter: [", clientID, "]  - Error: ", err.Error())
 		return
 	}
 	return
@@ -195,7 +193,7 @@ func StatusUserCredentials(user User) (hasRole bool, hasCredentials bool, err er
 			err = nil
 			return
 		}
-		log.Println("[StatusUserCredentials] Erro ao pegar o clientID e Secret: " + err.Error())
+		log.Println("[StatusUserCredentials] Error getting clientID and Secret: " + err.Error())
 		return
 	}
 	hasRole = true

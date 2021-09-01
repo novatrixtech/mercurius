@@ -23,14 +23,14 @@ func InitializeUserCredentials(ctx *contx.Context) {
 	body, err := ctx.Req.Body().Bytes()
 	defer ctx.Req.Body().ReadCloser()
 	if err != nil {
-		log.Println("[GetUserCredentials] Erro ao transformar o JSON em array de bytes: " + err.Error())
+		log.Println("[GetUserCredentials] Error converting JSON to array bytes: " + err.Error())
 		ctx.JSON(http.StatusBadRequest, "{'error':'Invalid body message'}")
 		return
 	}
 	user := User{}
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		log.Printf("[GetUserCredentials] Erro ao fazer o binding de [%s] em objeto Request: %s\n", string(body), err.Error())
+		log.Printf("[GetUserCredentials] Error binding [%s] into request object: %s\n", string(body), err.Error())
 		ctx.JSON(http.StatusBadRequest, "{'error':'Invalid body message'}")
 		return
 	}
@@ -57,31 +57,31 @@ func GetAccessToken(ctx *contx.Context) {
 	}
 	decodedClientID, err := decodeClientID(u)
 	if err != nil {
-		log.Printf("[GetAccessToken] Erro decodificar dados do ClientID: [%s] - Erro: [%s]\n", u, err.Error())
+		log.Printf("[GetAccessToken] Error decoding data from ClientID: [%s] - Error: [%s]\n", u, err.Error())
 		ctx.JSON(http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 	contactName, nonce, err := getDataFromClientID(decodedClientID)
 	if err != nil {
-		log.Printf("[GetAccessToken] Erro obter dados do ClientID: [%s] - Erro: [%s]\n", u, err.Error())
+		log.Printf("[GetAccessToken] Error getting data from ClientID: [%s] - Error: [%s]\n", u, err.Error())
 		ctx.JSON(http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 	secretDecoded, err := decodeSecret(p, nonce)
 	if err != nil {
-		log.Println("[GetAccessToken] Erro ao decodar o secret. Erro: ", err.Error())
+		log.Println("[GetAccessToken] Error decoding the secret. Error: ", err.Error())
 		ctx.JSON(http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 	dataDoSecret, contatoID, IPDoSecret, err := getAndValidateDataFromSecret(secretDecoded)
 	if err != nil {
-		log.Println("[GetAccessToken] Erro ao obter os dados do secret. Erro: ", err.Error())
+		log.Println("[GetAccessToken] Error getting secret. Error: ", err.Error())
 		ctx.JSON(http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 	role, err := GetUserRoleByContactID(contatoID)
 	if err != nil {
-		log.Println("[GetAccessToken] Erro ao obter o role do usuario do banco de dados. Erro: ", err.Error())
+		log.Println("[GetAccessToken] Error getting user role from db. Error: ", err.Error())
 		ctx.JSON(http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
@@ -100,7 +100,7 @@ func GetAccessToken(ctx *contx.Context) {
 	ac.IPUsedToGenerateAC = ipRemotoOrigem.String()
 	_, acID, err := cryptonx.Encrypter(conf.Cfg.Section("").Key("oauth_key").Value(), contactName)
 	if err != nil {
-		log.Println("[GetAccessToken] Erro ao gerar Access Token: ", err.Error())
+		log.Println("[GetAccessToken] Error generating Access Token: ", err.Error())
 		ctx.JSON(http.StatusInternalServerError, "{'error': 'Could not generate Access Token'}")
 		return
 	}
@@ -120,7 +120,7 @@ func GetOauthUserCredentials(ctx *contx.Context) {
 	rolesAllowed := []string{"3", "12"}
 	_, err = ValidateAuthorizationHeader(ctx.Req.Header, "GetUserCredentials", rolesAllowed)
 	if err != nil {
-		log.Println("[GetUserCredentials] Erro na autorização do AC: " + err.Error())
+		log.Println("[GetUserCredentials] Error access token Authorization: " + err.Error())
 		ctx.JSON(http.StatusUnauthorized, "{'error':'Access Token invalid'}")
 		return
 	}
@@ -128,13 +128,13 @@ func GetOauthUserCredentials(ctx *contx.Context) {
 	user.ID = ctx.ParamsInt(":idclient")
 	user.Name, err = GetUserNameByContactID(user.ID)
 	if err != nil {
-		log.Printf("[GetUserCredentials] Erro ao buscar o nome do usuario de ID [%d]. Erro: %s\n", user.ID, err.Error())
+		log.Printf("[GetUserCredentials] Error getting user name by ID [%d]. Error: %s\n", user.ID, err.Error())
 		ctx.JSON(http.StatusBadRequest, "{'error':'Invalid user ID'}")
 		return
 	}
 	clientID, secret, err := GetUserCredentials(user)
 	if err != nil {
-		log.Printf("[GetUserCredentials] Erro ao obter as credenciais do usuario [%d] no banco. Erro: %s\n", user.ID, err.Error())
+		log.Printf("[GetUserCredentials] Error getting user credentials [%d] from db. Error: %s\n", user.ID, err.Error())
 		ctx.JSON(http.StatusInternalServerError, "{'error': 'Could not obtain credentials'}")
 		return
 	}
@@ -165,7 +165,7 @@ func CheckFormUserCredentials(ctx *contx.Context, user User) {
 	ctx.Redirect("/")
 }
 
-// LoginRequired valida a existencia ou nao de cookies para acesso a telas
+// LoginRequired checks the cookies for screen access
 func LoginRequired(ctx *contx.Context) {
 	cookie, err := ctx.Req.Cookie(cookieName)
 	if err != nil {
@@ -200,7 +200,7 @@ func LoginRequired(ctx *contx.Context) {
 	}
 }
 
-// LoginRequiredAPI valida login para realizacao de chamadas de API
+// LoginRequiredAPI checks the cookies for api calls
 func LoginRequiredAPI(ctx *contx.Context) {
 	header := ctx.Req.Header.Get("Authorization")
 	if header != "" {
@@ -225,13 +225,13 @@ func LoginRequiredAPI(ctx *contx.Context) {
 	ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 }
 
-//LoginRequiredAPISystem verifica se as credenciais para executar chamadas na API no nivel sistema estao OK
+//LoginRequiredAPISystem checks if credentials are ok to call the api
 func LoginRequiredAPISystem(ctx *contx.Context) {
 	var err error
 	rolesAllowed := []string{"12"}
 	_, err = ValidateAuthorizationHeader(ctx.Req.Header, "APIETHOperations", rolesAllowed)
 	if err != nil {
-		log.Println("[InsereInscricaoCursos] Erro na autorização do AC: " + err.Error())
+		log.Println("[InsereInscricaoCursos] Error access token authorization: " + err.Error())
 		ctx.JSON(http.StatusUnauthorized, "{'error':'Access Token invalid'}")
 		return
 	}
