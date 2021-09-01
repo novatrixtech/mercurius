@@ -73,7 +73,7 @@ func ClientDecrypter(key, clientID, clientSecret string) (name, id string, err e
 func ClientEncrypter(key, appName, appID string) (clientID, clientSecret string, err error) {
 	clientID, clientSecret, err = cryptonx.Encrypter(key, appName+"|"+appID)
 	if err != nil {
-		log.Println("[ClientEncrypter] Erro ao encriptar texto: ", err.Error())
+		log.Println("[ClientEncrypter] Error encrypting text: ", err.Error())
 		return
 	}
 	return

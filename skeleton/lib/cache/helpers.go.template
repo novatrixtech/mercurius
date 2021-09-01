@@ -18,7 +18,7 @@ func PutIntoCache(key string, value interface{}) {
 
 	err := PutIntoCacheWithTimeout(key, timeout, value)
 	if err != nil {
-		log.Printf("[PutIntoCache] Erro ao incluir no cache: [%s]. Key: [%s] - Value: [%v]\n", err.Error(), key, value)
+		log.Printf("[PutIntoCache] Error putting into cache: [%s]. Key: [%s] - Value: [%v]\n", err.Error(), key, value)
         return
 	}
 	log.Printf("[PutIntoCache] Cache inputed. Key: [%s] - Value: [%v]\n", key, value)
@@ -33,7 +33,7 @@ func PutIntoCacheWithTimeout(key string, timeoutInSeconds int, value interface{}
 
 	err := cache.Put(key, value, int64(timeoutInSeconds))
 	if err != nil {
-		log.Printf("[PutIntoCacheWithTimeout] Erro ao incluir no cache: [%s]. Key: [%s] - Value: [%v] - Timeout: [%d]\n", err.Error(), key, value, timeoutInSeconds)
+		log.Printf("[PutIntoCacheWithTimeout] Error putting into cache: [%s]. Key: [%s] - Value: [%v] - Timeout: [%d]\n", err.Error(), key, value, timeoutInSeconds)
 		return err
 	}
 	log.Printf("[PutIntoCacheWithTimeout] Cache inputed. Key: [%s] - Value: [%v] - Timeout: [%d]\n", key, value, timeoutInSeconds)

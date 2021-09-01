@@ -33,23 +33,23 @@ func GetMongoSession() (*mgo.Session, error) {
 	}
 
 	LoadMongoConfig()
-	var erro error
-	mgoSession, erro = mgo.Dial(mongoDbURI)
-	if erro != nil {
-		log.Printf("[GetMongoSession] Erro ao tentar abrir a sessao com o Mongo: [%s]\n", erro.Error())
-		return nil, erro
+	var err error
+	mgoSession, err = mgo.Dial(mongoDbURI)
+	if err != nil {
+		log.Printf("[GetMongoSession] Error opening mongo db session: [%s]\n", err.Error())
+		return nil, err
 	}
-	return mgoSession.Copy(), erro
+	return mgoSession.Copy(), err
 }
 
 /*
 GetMongoCollection gets a data collection
 */
 func GetMongoCollection(collectionName string) (*mgo.Collection, error) {
-	mgoSession, erro := GetMongoSession()
-	if erro != nil {
-		log.Printf("[GetCollection] Erro ao conectar ao Mongo: [%s]\n", erro.Error())
-		return nil, erro
+	mgoSession, err := GetMongoSession()
+	if err != nil {
+		log.Printf("[GetCollection] Error connecting to mongo db: [%s]\n", err.Error())
+		return nil, err
 	}
 
 	collection := mgoSession.DB(mongoDbName).C(collectionName)
