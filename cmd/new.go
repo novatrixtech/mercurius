@@ -51,7 +51,6 @@ var (
 	srcRoot string
 
 	// mercurius related paths
-	mercuriusPkg *build.Package
 	appPath      string
 	appName      string
 	basePath     string
@@ -170,8 +169,7 @@ func setApplicationPath() {
 }
 
 func copyNewAppFiles(cfgs map[string]interface{}) {
-	var err error
-	err = os.MkdirAll(appPath, 0777)
+	err := os.MkdirAll(appPath, 0o777)
 	if err != nil {
 		printColored(fmt.Sprintf("Abort: Could not generate app %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
@@ -270,18 +268,6 @@ func getGeneratedCode() *build.Package {
 	return pkg
 }
 
-func getGodep() {
-	_, err := build.Import(godepPath, "", build.FindOnly)
-	if err != nil {
-		cmd := exec.Command("go", "get", godepPath)
-		err = cmd.Run()
-		if err != nil {
-			printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
-			os.Exit(-1)
-		}
-	}
-}
-
 func getDependencies() {
 	cmd := exec.Command("go", "get", "./...")
 	printColored("Getting all dependencies and waiting Go finishes the job...", color.New(color.FgHiYellow).PrintlnFunc())
@@ -292,6 +278,7 @@ func getDependencies() {
 	}
 }
 
+// TODO: update vendorize to usenew go mod's vendorize methodology
 func vendorize() {
 	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
