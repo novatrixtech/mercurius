@@ -141,7 +141,6 @@ func GetOauthUserCredentials(ctx *contx.Context) {
 	user.ClientID = clientID
 	user.Secret = secret
 	ctx.JSON(http.StatusCreated, user)
-	return
 }
 
 //CheckFormUserCredentials handle user's authentication via Login Form

@@ -81,7 +81,7 @@ func ClientEncrypter(key, appName, appID string) (clientID, clientSecret string,
 
 func parse(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, errors.New("Unexpected Signing method")
+		return nil, errors.New("[parse] unexpected Signing method")
 	}
 	return []byte(conf.Cfg.Section("").Key("oauth_key").Value()), nil
 }
