@@ -106,7 +106,7 @@ func DSN() string {
 LoadDbConfig - Loads specific database connection information
 */
 func LoadDbConfig() (dbConnectionInfo *DbConnInfo) {
-	if len(os.Getenv("db_type")) < 1 {
+	if !isDbConnParamsInEnvVariables() {
 		dbConnectionInfo = &DbConnInfo{
 			DBType: Cfg.Section("").Key("db_type").Value(),
 			User:   Cfg.Section("").Key("db_user").Value(),
@@ -128,10 +128,7 @@ func LoadDbConfig() (dbConnectionInfo *DbConnInfo) {
 	return
 }
 
-//checks if db config data is coming from environment variables
+// checks if db config data is coming from environment variables
 func isDbConnParamsInEnvVariables() bool {
-	if len(os.Getenv("db_type")) > 1 {
-		return true
-	}
-	return false
+	return len(os.Getenv("db_type")) > 1
 }
