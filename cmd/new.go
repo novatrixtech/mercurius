@@ -102,6 +102,13 @@ func initGoPaths() {
 }
 
 func setApplicationPath() {
+	// set base project path
+	// skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
+	if os.Getenv("GOPATH") == "" && os.Getenv("MERCURIUSPATH") == "" {
+		printColored("Abort: neither GOPATH or MERCURIUSPATH are set. You need to define them to mercurius be able to access skeleton (template) files\n", color.New(color.FgHiRed).PrintlnFunc())
+		os.Exit(-1)
+	}
+
 	var err error
 	appName = terminal("What is your application name?", "go-myapp")
 	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
@@ -146,15 +153,16 @@ func setApplicationPath() {
 		// is a subdirectory such as $GOROOT/src/path/to/mercurius
 		basePath += "/"
 	}
-	// set base project path
-	// skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
-	skeletonPath = filepath.Join(os.Getenv("GOPATH"), "/src/", "github.com/novatrixtech/mercurius", "skeleton")
+
+	if len(os.Getenv("GOPATH")) > 0 {
+		skeletonPath = filepath.Join(os.Getenv("GOPATH"), "/src/", "github.com/novatrixtech/mercurius", "skeleton")
+	} else {
+		skeletonPath = filepath.Join(os.Getenv("MERCURIUSPATH"), "/", "skeleton")
+	}
 
 	if debug {
-
 		color.Set(color.FgHiMagenta)
 		defer color.Unset()
-
 		fmt.Println("1 - Your runtime is: ", runtime.GOOS)
 		// if runtime.GOOS == "windows" {
 		fmt.Printf(" skeletonPath: %s \n", skeletonPath)
@@ -163,7 +171,9 @@ func setApplicationPath() {
 		fmt.Printf(" gitUser: %s \n", gitUser)
 		fmt.Printf(" import-Path: %s \n", importPath)
 		fmt.Printf(" app-Path: %s \n", appPath)
-		fmt.Printf(" base-Path: %s \n\n", basePath)
+		fmt.Printf(" base-Path: %s \n", basePath)
+		fmt.Printf(" gopath: %s\n", gopath)
+		fmt.Printf(" srcRoot: %s\n\n", srcRoot)
 		// }
 	}
 }
@@ -219,9 +229,9 @@ func confValues() map[string]interface{} {
 }
 
 func packageStateCheck() {
-	cd(os.Getenv("GOPATH") + "/src/" + importPath)
+	cd(appPath)
 	if debug {
-		printColored(fmt.Sprintf("pkg.Dir: %q", os.Getenv("GOPATH")+"/src/"+importPath), color.New(color.FgHiMagenta).PrintlnFunc())
+		printColored(fmt.Sprintf("pkg.Dir: %q", appPath), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 	printColored("Generating go modules.", color.New(color.FgHiMagenta).PrintlnFunc())
 	cmdGoMod := exec.Command("go", "mod", "tidy")
