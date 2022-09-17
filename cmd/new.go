@@ -51,7 +51,6 @@ var (
 	srcRoot string
 
 	// mercurius related paths
-	mercuriusPkg *build.Package
 	appPath      string
 	appName      string
 	basePath     string
@@ -103,6 +102,13 @@ func initGoPaths() {
 }
 
 func setApplicationPath() {
+	// set base project path
+	// skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
+	if os.Getenv("GOPATH") == "" && os.Getenv("MERCURIUSPATH") == "" {
+		printColored("Abort: neither GOPATH or MERCURIUSPATH are set. You need to define them to mercurius be able to access skeleton (template) files\n", color.New(color.FgHiRed).PrintlnFunc())
+		os.Exit(-1)
+	}
+
 	var err error
 	appName = terminal("What is your application name?", "go-myapp")
 	gitPath := terminal("What is your git source host? github.com, bitbucket.org or gitlab.com?", "github.com")
@@ -147,15 +153,16 @@ func setApplicationPath() {
 		// is a subdirectory such as $GOROOT/src/path/to/mercurius
 		basePath += "/"
 	}
-	// set base project path
-	// skeletonPath = filepath.Join(mercuriusPkg.Dir, "skeleton")
-	skeletonPath = filepath.Join(os.Getenv("GOPATH"), "/src/", "github.com/novatrixtech/mercurius", "skeleton")
+
+	if len(os.Getenv("GOPATH")) > 0 {
+		skeletonPath = filepath.Join(os.Getenv("GOPATH"), "/src/", "github.com/novatrixtech/mercurius", "skeleton")
+	} else {
+		skeletonPath = filepath.Join(os.Getenv("MERCURIUSPATH"), "/", "skeleton")
+	}
 
 	if debug {
-
 		color.Set(color.FgHiMagenta)
 		defer color.Unset()
-
 		fmt.Println("1 - Your runtime is: ", runtime.GOOS)
 		// if runtime.GOOS == "windows" {
 		fmt.Printf(" skeletonPath: %s \n", skeletonPath)
@@ -164,14 +171,15 @@ func setApplicationPath() {
 		fmt.Printf(" gitUser: %s \n", gitUser)
 		fmt.Printf(" import-Path: %s \n", importPath)
 		fmt.Printf(" app-Path: %s \n", appPath)
-		fmt.Printf(" base-Path: %s \n\n", basePath)
+		fmt.Printf(" base-Path: %s \n", basePath)
+		fmt.Printf(" gopath: %s\n", gopath)
+		fmt.Printf(" srcRoot: %s\n\n", srcRoot)
 		// }
 	}
 }
 
 func copyNewAppFiles(cfgs map[string]interface{}) {
-	var err error
-	err = os.MkdirAll(appPath, 0777)
+	err := os.MkdirAll(appPath, 0o777)
 	if err != nil {
 		printColored(fmt.Sprintf("Abort: Could not generate app %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
 		os.Exit(-1)
@@ -221,9 +229,9 @@ func confValues() map[string]interface{} {
 }
 
 func packageStateCheck() {
-	cd(os.Getenv("GOPATH") + "/src/" + importPath)
+	cd(appPath)
 	if debug {
-		printColored(fmt.Sprintf("pkg.Dir: %q", os.Getenv("GOPATH")+"/src/"+importPath), color.New(color.FgHiMagenta).PrintlnFunc())
+		printColored(fmt.Sprintf("pkg.Dir: %q", appPath), color.New(color.FgHiMagenta).PrintlnFunc())
 	}
 	printColored("Generating go modules.", color.New(color.FgHiMagenta).PrintlnFunc())
 	cmdGoMod := exec.Command("go", "mod", "tidy")
@@ -270,18 +278,6 @@ func getGeneratedCode() *build.Package {
 	return pkg
 }
 
-func getGodep() {
-	_, err := build.Import(godepPath, "", build.FindOnly)
-	if err != nil {
-		cmd := exec.Command("go", "get", godepPath)
-		err = cmd.Run()
-		if err != nil {
-			printColored(fmt.Sprintf("Abort: %s\n", err), color.New(color.FgHiRed).PrintlnFunc())
-			os.Exit(-1)
-		}
-	}
-}
-
 func getDependencies() {
 	cmd := exec.Command("go", "get", "./...")
 	printColored("Getting all dependencies and waiting Go finishes the job...", color.New(color.FgHiYellow).PrintlnFunc())
@@ -292,6 +288,7 @@ func getDependencies() {
 	}
 }
 
+// TODO: update vendorize to usenew go mod's vendorize methodology
 func vendorize() {
 	v := terminal("Your App is ready to go. Do you also want to vendorize it using Godep?", "y")
 	if v == "y" {
